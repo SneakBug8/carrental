@@ -99,9 +99,9 @@ export class WebClientRouter
         }
 
         console.log(JSON.stringify(car));
-        Car.Update(car);
+        const r = await Car.Update(car);
 
-        res.json(new Requisite("Success"));
+        res.json(r);
         // WebClientUtil.render(req, res, "register", {}, false);
     }
 

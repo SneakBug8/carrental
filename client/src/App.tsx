@@ -1,5 +1,4 @@
 import React from "react";
-import { MyRouter } from "./MyRouter";
 import { Sidebar } from "./partials/Sidebar";
 import { Navbar } from "./partials/Navbar";
 import { Route, BrowserRouter as Router } from "react-router-dom";
@@ -10,22 +9,17 @@ export class App extends React.Component
   public render()
   {
     return (
-      <Router>
-        <Route path={`/admin`} component={AdminRouter} />
-        <Route>
-          <div className="container App">
-            <Navbar />
-            <div className="mt-1 row">
-              <div className="col-sm-12 col-md-3">
-                <Sidebar />
-              </div>
-              <div className="col-sm-12 col-md-9">
-                {this.props.children}
-              </div>
-            </div>
+      <div className="container App">
+        <Navbar />
+        <div className="mt-1 row">
+          <div className="col-sm-12 col-md-3">
+            <Sidebar />
           </div>
-        </Route>
-      </Router>
+          <div className="col-sm-12 col-md-9">
+            {this.props.children}
+          </div>
+        </div>
+      </div>
     );
   }
 }

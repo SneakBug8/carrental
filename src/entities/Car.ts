@@ -24,7 +24,8 @@ export class Car
         return res;
     }
 
-    public static async Create(ModelName: string, LocationName: string) {
+    public static async Create(ModelName: string, LocationName: string)
+    {
         const res = new Car();
         res.ModelName = ModelName;
         res.LocationName = LocationName;
@@ -34,18 +35,21 @@ export class Car
         return res;
     }
 
-    public async populate() {
+    public async populate()
+    {
         this.Model = await this.getModel();
         this.Location = await this.getLocation();
 
         return this;
     }
 
-    public async getModel() {
+    public async getModel()
+    {
         return await CarModel.GetByName(this.ModelName);
     }
 
-    public async getLocation() {
+    public async getLocation()
+    {
         return await Location.GetByName(this.LocationName);
     }
 
@@ -92,22 +96,33 @@ export class Car
 
     public static async Update(model: Car)
     {
-        await CarRepository().where("Id", model.Id).update({
-            Model: model.ModelName,
-            Location: model.LocationName,
-        });
+        try {
+            await CarRepository().where("Id", model.Id).update({
+                Model: model.ModelName,
+                Location: model.LocationName,
+            });
+            return new Requisite(true);
+        }
+        catch (e) {
+            return new Requisite().error(e);
+        }
     }
 
-    public static async Insert(model: Car): Promise<number>
+    public static async Insert(model: Car): Promise<Requisite<number>>
     {
-        const d = await CarRepository().insert({
-            Model: model.ModelName,
-            Location: model.LocationName,
-        });
+        try {
+            const d = await CarRepository().insert({
+                Model: model.ModelName,
+                Location: model.LocationName,
+            });
 
-        Logger.info("Created Car " + model.Id);
+            Logger.info("Created Car " + model.Id);
 
-        return d[0];
+            return new Requisite(d[0]);
+        }
+        catch (e) {
+            return new Requisite().error(e);
+        }
     }
 
     public static async Delete(name: string)

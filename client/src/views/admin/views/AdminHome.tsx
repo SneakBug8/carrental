@@ -1,5 +1,6 @@
 import React from "react";
 import { ModelSelector } from "../partials/ModelSelector";
+import { LocationSelector } from "../partials/LocationSelector";
 
 export class AdminHome extends React.Component
 {
@@ -10,7 +11,6 @@ export class AdminHome extends React.Component
           <p>
             AdminHome
         </p>
-        <ModelSelector callback={(str) => console.log(str)}/>
         </div>
     );
   }

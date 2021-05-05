@@ -3,27 +3,28 @@ import { CarModel } from "../../../entities/CarModel";
 import { Requisite } from "../../../Requisite";
 import { State } from "../../../State";
 import { ErrorMessage } from "../../../partials/ErrorMessage";
-import Select, { GroupTypeBase } from "react-select";
+import Select from "react-select";
+import { Location } from "../../../entities/Location";
 
-interface IModelSelectorProps
+interface ILocationSelectorProps
 {
   callback: (value: string) => void;
 };
 
-interface IModelSelectorState
+interface ILocationSelectorState
 {
-  models: CarModel[];
+  locations: Location[];
   names: any[];
   error: Requisite;
 }
 
-export class ModelSelector extends React.Component<IModelSelectorProps, IModelSelectorState>
+export class LocationSelector extends React.Component<ILocationSelectorProps, ILocationSelectorState>
 {
-  constructor(props: IModelSelectorProps)
+  constructor(props: ILocationSelectorProps)
   {
     super(props);
     this.state = {
-      models: new Array<CarModel>(),
+      locations: new Array(),
       names: new Array(),
       error: new Requisite(),
     };
@@ -31,13 +32,13 @@ export class ModelSelector extends React.Component<IModelSelectorProps, IModelSe
 
   componentDidMount()
   {
-    State.GetModels().then((response) =>
+    State.GetLocations().then((response) =>
     {
       console.log(response.data);
       console.log((response.data || new Array<CarModel>()).map((el) => el.Name));
       this.setState({
-        models: response.data || new Array<CarModel>(),
-        names: (response.data || new Array<CarModel>()).map((el) =>
+        locations: response.data || new Array(),
+        names: (response.data || new Array<Location>()).map((el) =>
           ({
             label: el.Name,
             value: el.Name,
@@ -63,15 +64,15 @@ export class ModelSelector extends React.Component<IModelSelectorProps, IModelSe
     return (
       <div>
         <ErrorMessage requisite={this.state.error} />
-        <label htmlFor="models">Выберите модель:</label>
+        <label htmlFor="locations">Выберите локацию:</label>
         <Select
-          className="models-select"
-          id="models"
+          className="locations-select"
+          id="locations"
           isDisabled={false}
           isLoading={false}
           isClearable={false}
           isSearchable={true}
-          name="models"
+          name="locations"
           options={this.state.names}
           onChange = {this.handleChange}
         />

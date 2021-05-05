@@ -19,7 +19,10 @@ export class Requisite<T = null> {
 
     public success(data?: T | string)
     {
-        if (typeof data === "string") {
+        if (typeof data === "boolean") {
+            this.message = "Success";
+        }
+        else if (typeof data === "string") {
             this.message = data;
         }
         else {

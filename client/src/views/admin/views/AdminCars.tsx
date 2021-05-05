@@ -1,18 +1,20 @@
 import React from "react";
-import axios from "axios";
 import { API } from "../../../API";
 import { Car } from "../../../entities/Car";
 import { AdminCarPartial } from "../partials/AdminCar";
 
 export class AdminCars extends React.Component<{}, {cars: Car[], error: string}>
 {
-  constructor(props: {}) {
+  constructor(props: {})
+  {
     super(props);
     this.state = {
       cars: new Array<Car>(),
       error: "",
     };
+  }
 
+  componentDidMount() {
     API.GetCarsPopulate().then((response) => {
       console.log(response.data);
       this.setState({

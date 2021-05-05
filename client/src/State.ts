@@ -2,6 +2,7 @@ import { Car } from "./entities/Car";
 import { API } from "./API";
 import { Requisite } from "./Requisite";
 import { CarModel } from "./entities/CarModel";
+import { Location } from "./entities/Location";
 
 class StateClass
 {
@@ -10,6 +11,9 @@ class StateClass
 
   public modelsLoaded = false;
   public models: CarModel[] = [];
+
+  public locationsLoaded = false;
+  public locations: Location[] = [];
 
   public async GetCars()
   {
@@ -43,6 +47,24 @@ class StateClass
 
     this.models = res.data as CarModel[];
     this.modelsLoaded = true;
+
+    return res;
+  }
+
+  public async GetLocations()
+  {
+    if (this.locationsLoaded) {
+      return new Requisite(this.locations);
+    }
+
+    const res = await API.GetLocations();
+
+    if (!res.result) {
+      return res;
+    }
+
+    this.locations = res.data as Location[];
+    this.locationsLoaded = true;
 
     return res;
   }

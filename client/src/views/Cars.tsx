@@ -16,7 +16,7 @@ export class CarsView extends React.Component<{}, {cars: Car[], error: Requisite
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     State.GetCars().then((response) => {
       console.log(response.data);
       this.setState({
