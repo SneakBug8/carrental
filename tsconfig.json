@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+      "experimentalDecorators": true,
+      "outDir": "./bin/", // path to output directory
+      "baseUrl": "./src",
+      // "strictNullChecks": true, // enable strict null checks as a best practice
+      "module": "commonjs", // specify module code generation
+      "target": "es2015", // specify ECMAScript target version
+      "rootDir": "src",
+      "types": ["node"],
+      // "strict": true,
+      "incremental": false,
+      "pretty": true,
+      "sourceMap": true,
+      "declaration": false,
+      "resolveJsonModule": true,
+      "emitDecoratorMetadata": true,
+  },
+  "include": [
+      "src/**/*"
+  ]
+}

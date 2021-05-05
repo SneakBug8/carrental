@@ -1,0 +1,252 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+article {
+    padding: 0 10px;
+}
+
+table {
+    table-layout: fixed;
+}
+
+table .selected {
+    background-color: #c2c0c2;
+}
+
+.selectorcontainer {
+    width: 80%;
+    margin: 0 10%;
+    border: 1px solid #c2c0c2;
+    max-height: 50vh;
+    overflow-y: scroll;
+}
+
+.card {
+    max-width: 100%;
+    background: none;
+    margin-bottom: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #cacaca;
+}
+
+a:hover, button, .btn {
+    cursor: pointer;
+}
+
+.red {
+    background-color: lightcoral;
+}
+
+.red:hover{
+    background-color: #ce5f5f;
+}
+
+.green {
+    background-color: lightgreen;
+}
+
+.green:hover {
+    background-color: #6ce76c;
+}
+
+.voc {
+    width: 200px;
+    height: auto;
+    float: right;
+}
+
+.selector {
+    display: block;
+    margin: 1em 0;
+    padding: 0;
+}
+
+.selector li {
+    display: inline-block;
+    border: 1px solid #cacaca;
+    margin: 0 1em;
+    padding: 0.5em;
+    cursor: pointer;
+}
+
+.selector li:first-child {
+    margin-left: 0;
+}
+
+.selector li.selected {
+    background-color: #ffc5c5;
+}
+
+.d-none {
+    display: none;
+}
+
+/* The overlay effect with black background */
+.overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+    /* Black with a little bit see-through */
+}
+
+/* The content */
+.overlay-content {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 80%;
+    text-align: center;
+    margin-top: 30px;
+    margin: auto;
+}
+
+/* Close button */
+.overlay .closebtn {
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 60px;
+    cursor: pointer;
+    color: white;
+}
+
+.overlay .closebtn:hover {
+    color: #ccc;
+}
+
+/* Style the search field */
+.overlay input[type=text] {
+    padding: 15px;
+    font-size: 17px;
+    border: none;
+    float: left;
+    width: 80%;
+    background: white;
+}
+
+.overlay input[type=text]:hover {
+    background: #f1f1f1;
+}
+
+/* Style the submit button */
+.overlay button,
+.overlay-big-btn {
+    float: left;
+    width: 20%;
+    padding: 15px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+.overlay-big-btn {
+    float: left;
+    width: 100%;
+}
+
+.overlay button:hover,
+.overlay-big-btn:hover {
+    background: #bbb;
+}
+
+.overlay h2 {
+    color: white;
+    margin: 5px;
+}
+
+.alert {
+    display: block;
+    padding: 1em;
+    text-align: center;
+    margin: 1em;
+}
+
+.alert-danger {
+    border: 3px solid red;
+    background-color: #ce4a4a83;
+}
+
+.alert-info {
+    border: 3px solid blue;
+    background-color: #5cb8ff60;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.marketheader, .playerbottom {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000000;
+    color: white;
+    margin-bottom: 15px;
+    padding: 3px;
+}
+
+.marketheader:hover, .playerbottom:hover {
+    background-color: #353535;
+    cursor: pointer;
+}
+
+.marketheader span, .playerbottom span {
+    float: left;
+}
+
+.card-icon {
+    float: right;
+}
+
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+@media (min-width: 500px) {
+    .sm-only {
+        display: none;
+    }
+}
+
+.efficiency-bar {
+    background-color: #000000;
+    width: 100%;
+    height: 1em;
+    margin: 0.5em;
+    border: 1px solid #000000;
+}
+
+.efficiency-fill {
+    height: 100%;
+    background-color: #6ce76c;
+}
+
+.btn-default:hover {
+    background-color: #ddd;
+    background-image: none;
+}
+
+.nav-group a:hover {
+    background-color: #dcdfe1;
+}
+
+.pane {
+    padding-bottom: 1em;
+}
