@@ -1,0 +1,44 @@
+// in posts.js
+import * as React from "react";
+import { List, Datagrid, Edit, Create, SimpleForm, TextField, EditButton, TextInput } from "react-admin";
+import BookIcon from "@material-ui/icons/Book";
+import { Car } from "../entities/Car";
+
+export const PostIcon = BookIcon;
+
+export const CarsList = (props : any) => (
+    <List {...props}>
+        <Datagrid>
+            <TextField source="id" />
+            <TextField source="modelId" />
+            <TextField source="locationId" />
+            <TextField source="color" />
+            <EditButton basePath="/cars" />
+        </Datagrid>
+    </List>
+);
+
+const CarTitle = ({ record }: { record: Car} | any) => {
+    return <span>Car {record ? `"${record.id}"` : ""}</span>;
+};
+
+export const CarEdit = (props: any) => (
+    <Edit title={<CarTitle/>} {...props}>
+        <SimpleForm>
+            <TextInput disabled source="id" />
+            <TextInput source="modelId" />
+            <TextInput source="locationId" />
+            <TextInput source="color" />
+        </SimpleForm>
+    </Edit>
+);
+
+export const CarCreate = (props: any) => (
+    <Create title="Create a Car" {...props}>
+        <SimpleForm>
+            <TextInput source="modelId" />
+            <TextInput source="locationId" />
+            <TextInput source="color" />
+        </SimpleForm>
+    </Create>
+);

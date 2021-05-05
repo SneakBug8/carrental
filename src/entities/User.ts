@@ -5,6 +5,7 @@ import { Requisite } from "services/Requisites/Requisite";
 
 export class User
 {
+    public Id: number;
     public Login: string;
     public Password: string;
     public Role: number = 1;
@@ -12,6 +13,7 @@ export class User
     public static From(dbobject: any)
     {
         const res = new User();
+        res.Id = dbobject.Id;
         res.Login = dbobject.Login;
         res.Password = dbobject.Password;
         res.Role = dbobject.Role;
@@ -29,6 +31,17 @@ export class User
         return res;
     }
 
+    public static async GetById(id: number)
+    {
+        const data = await UserRepository().select().where("Id", id).first();
+
+        if (data) {
+            return new Requisite<User>().success(this.From(data));
+        }
+
+        return new Requisite<User>().error("No such player");
+    }
+
     public static async GetByName(name: string)
     {
         const data = await UserRepository().select().where("Login", name).first();
@@ -42,7 +55,7 @@ export class User
 
     public static async Count(): Promise<number>
     {
-        const data = await UserRepository().count("Login as c").first() as any;
+        const data = await UserRepository().count("Id as c").first() as any;
 
         if (data) {
             return data.c;
@@ -51,16 +64,17 @@ export class User
         return null;
     }
 
-    public static async Exists(name: string): Promise<boolean>
+    public static async Exists(id: number): Promise<boolean>
     {
-        const res = await UserRepository().count("Login as c").where("Login", name).first() as any;
+        const res = await UserRepository().count("Id as c").where("Id", id).first() as any;
 
         return res.c > 0;
     }
 
     public static async Update(user: User)
     {
-        await UserRepository().where("Login", user.Login).update({
+        await UserRepository().where("Id", user.Id).update({
+            Login: user.Login,
             Password: user.Password,
             Role: user.Role,
         });
@@ -74,19 +88,19 @@ export class User
             Role: user.Role,
         });
 
-        Logger.info("Created user " + user.Login);
+        Logger.info("Created user " + user.Id);
 
         return d[0];
     }
 
-    public static async Delete(name: string)
+    public static async Delete(id: number)
     {
-        const pcheck = await this.GetByName(name);
+        const pcheck = await this.GetById(id);
         if (!pcheck.result) {
             return pcheck;
         }
 
-        await UserRepository().delete().where("Login", name);
+        await UserRepository().delete().where("Id", id);
         return new Requisite().success();
     }
 

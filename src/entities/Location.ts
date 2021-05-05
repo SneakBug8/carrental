@@ -5,23 +5,37 @@ import { Requisite } from "services/Requisites/Requisite";
 
 export class Location
 {
-    public Name: string;
+    public id: number;
+    public name: string;
 
     public static From(dbobject: any)
     {
         const res = new Location();
-        res.Name = dbobject.Name;
+        res.id = dbobject.Id;
+        res.name = dbobject.Name;
 
         return res;
     }
 
-    public static async Create(name: string) {
+    public static async Create(name: string)
+    {
         const res = new Location();
-        res.Name = name;
+        res.name = name;
 
         await this.Insert(res);
 
         return res;
+    }
+
+    public static async GetById(id: number)
+    {
+        const data = await LocationRepository().select().where("Id", id).first();
+
+        if (data) {
+            return this.From(data);
+        }
+
+        return null;
     }
 
     public static async GetByName(name: string)
@@ -37,7 +51,7 @@ export class Location
 
     public static async Count(): Promise<number>
     {
-        const data = await LocationRepository().count("Name as c").first() as any;
+        const data = await LocationRepository().count("Id as c").first() as any;
 
         if (data) {
             return data.c;
@@ -46,39 +60,49 @@ export class Location
         return null;
     }
 
-    public static async Exists(name: string): Promise<boolean>
+    public static async Exists(id: number): Promise<boolean>
     {
-        const res = await LocationRepository().count("Name as c").where("Name", name).first() as any;
+        const res = await LocationRepository().count("Id as c").where("Id", id).first() as any;
 
         return res.c > 0;
     }
 
     public static async Update(model: Location)
     {
-        await LocationRepository().where("Name", model.Name).update({
-            Name: model.Name,
-        });
-    }
-
-    public static async Insert(model: Location): Promise<number>
-    {
-        const d = await LocationRepository().insert({
-            Name: model.Name,
-        });
-
-        Logger.info("Created Location " + model.Name);
-
-        return d[0];
-    }
-
-    public static async Delete(name: string)
-    {
-        const pcheck = await this.GetByName(name);
-        if (!pcheck) {
-            return pcheck;
+        try {
+            await LocationRepository().where("Id", model.id).update({
+                Name: model.name,
+            });
+            return new Requisite(true);
         }
+        catch (e) {
+            return new Requisite().error(e);
+        }
+    }
 
-        await LocationRepository().delete().where("Name", name);
+    public static async Insert(location: Location): Promise<Requisite<Location>>
+    {
+        try {
+            const d = await LocationRepository().insert({
+                Name: location.name,
+            }).returning("Id");
+
+            location.id = d[0];
+
+            Logger.info("Created Location " + location.id);
+
+            return new Requisite(location);
+        }
+        catch (e) {
+            return new Requisite().error(e);
+        }
+    }
+
+    public static async Delete(id: number)
+    {
+        await LocationRepository().delete().where("Id", id);
+        Logger.info("Deleted Location " + id);
+
         return new Requisite().success();
     }
 

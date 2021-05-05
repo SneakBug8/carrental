@@ -24,6 +24,9 @@ app.listen(port, () =>
 app.use((req, res, next) =>
 {
     Logger.info(req.method + " to " + req.url);
+    if (req.body !== {}) {
+        Logger.info(JSON.stringify(req.body));
+    }
     next();
 });
 

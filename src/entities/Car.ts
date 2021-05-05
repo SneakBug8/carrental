@@ -7,9 +7,11 @@ import { Location } from "./Location";
 
 export class Car
 {
-    public Id: string;
-    public ModelName: string;
-    public LocationName: string;
+    public id: number;
+    public modelId: number;
+    public locationId: number;
+
+    public color: string;
 
     public Model: CarModel | null;
     public Location: Location | null;
@@ -17,18 +19,19 @@ export class Car
     public static From(dbobject: any)
     {
         const res = new Car();
-        res.Id = dbobject.Id;
-        res.ModelName = dbobject.Model;
-        res.LocationName = dbobject.Location;
+        res.id = dbobject.Id;
+        res.modelId = dbobject.ModelId;
+        res.locationId = dbobject.LocationId;
+        res.color = dbobject.Color;
 
         return res;
     }
 
-    public static async Create(ModelName: string, LocationName: string)
+    public static async Create(ModelId: number, LocationId: number)
     {
         const res = new Car();
-        res.ModelName = ModelName;
-        res.LocationName = LocationName;
+        res.modelId = ModelId;
+        res.locationId = LocationId;
 
         await this.Insert(res);
 
@@ -45,17 +48,17 @@ export class Car
 
     public async getModel()
     {
-        return await CarModel.GetByName(this.ModelName);
+        return await CarModel.GetById(this.modelId);
     }
 
     public async getLocation()
     {
-        return await Location.GetByName(this.LocationName);
+        return await Location.GetById(this.locationId);
     }
 
-    public static async GetByName(name: string)
+    public static async GetById(id: number)
     {
-        const data = await CarRepository().select().where("Name", name).first();
+        const data = await CarRepository().select().where("Id", id).first();
 
         if (data) {
             return new Requisite<Car>().success(this.From(data));
@@ -66,13 +69,13 @@ export class Car
 
     public static async GetWithLocation(name: string)
     {
-        const data = await CarRepository().select().where("Location", name);
+        const data = await CarRepository().select().where("LocationId", name);
         return this.UseQuery(data);
     }
 
     public static async GetWithModel(name: string)
     {
-        const data = await CarRepository().select().where("Model", name);
+        const data = await CarRepository().select().where("ModelId", name);
         return this.UseQuery(data);
     }
 
@@ -87,9 +90,9 @@ export class Car
         return null;
     }
 
-    public static async Exists(name: string): Promise<boolean>
+    public static async Exists(id: number): Promise<boolean>
     {
-        const res = await CarRepository().count("Name as c").where("Name", name).first() as any;
+        const res = await CarRepository().count("Id as c").where("Id", id).first() as any;
 
         return res.c > 0;
     }
@@ -97,9 +100,10 @@ export class Car
     public static async Update(model: Car)
     {
         try {
-            await CarRepository().where("Id", model.Id).update({
-                Model: model.ModelName,
-                Location: model.LocationName,
+            await CarRepository().where("Id", model.id).update({
+                ModelId: model.modelId,
+                LocationId: model.locationId,
+                Color: model.color,
             });
             return new Requisite(true);
         }
@@ -108,31 +112,36 @@ export class Car
         }
     }
 
-    public static async Insert(model: Car): Promise<Requisite<number>>
+    public static async Insert(model: Car): Promise<Requisite<Car>>
     {
         try {
             const d = await CarRepository().insert({
-                Model: model.ModelName,
-                Location: model.LocationName,
-            });
+                ModelId: model.modelId,
+                LocationId: model.locationId,
+                Color: model.color,
+            })
+            .returning("Id");
 
-            Logger.info("Created Car " + model.Id);
+            model.id = d[0];
+            Logger.info("Created Car " + model.id);
 
-            return new Requisite(d[0]);
+            return new Requisite(model);
         }
         catch (e) {
             return new Requisite().error(e);
         }
     }
 
-    public static async Delete(name: string)
+    public static async Delete(id: number)
     {
-        const pcheck = await this.GetByName(name);
-        if (!pcheck.result) {
+        const pcheck = await this.Exists(id);
+        if (!pcheck) {
             return pcheck;
         }
 
-        await CarRepository().delete().where("Name", name);
+        await CarRepository().delete().where("Id", id);
+        Logger.info(`Deleted Car ${id}`);
+
         return new Requisite().success();
     }
 

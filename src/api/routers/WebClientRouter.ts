@@ -9,6 +9,7 @@ import { Car } from "entities/Car";
 import { CarModel } from "entities/CarModel";
 import { Location } from "entities/Location";
 import { Requisite } from "services/Requisites/Requisite";
+import { Logger } from "utility/Logger";
 
 export class WebClientRouter
 {
@@ -20,16 +21,29 @@ export class WebClientRouter
 
         router.use(bodyParser.urlencoded({ extended: true }));
 
-        router.get("/car/all", this.onCars);
-        router.post("/car/update", this.onCars);
-        router.post("/car/insert", this.onCars);
-        router.post("/car/delete", this.onCars);
-        router.get("/car/all/populate", this.onCarsPopulated);
-        router.get("/model/all", this.onModels);
-        router.get("/location/all", this.onLocations);
-        router.get("/order/all", this.onCars); // TODO:
+        router.get("/cars/:id", this.onCarGet);
+        router.post("/cars", this.onCarInsert);
+        router.put("/cars/:id", this.onCarUpdate);
+        router.delete("/cars/:id", this.onCarDelete);
+        router.all("/cars", this.onGetCars);
 
-        router.get("/register", this.onRegister);
+        router.all("/car/all/populate", this.onCarsPopulated);
+
+        router.get("/models/:id", this.onGetModel);
+        router.post("/models", this.onModelInsert);
+        router.put("/models/:id", this.onModelUpdate);
+        router.delete("/models/:id", this.onModelDelete);
+        router.all("/models", this.onGetModels);
+
+        router.get("/locations/:id", this.onGetLocation);
+        router.post("/locations", this.onLocationInsert);
+        router.put("/locations/:id", this.onLocationUpdate);
+        router.delete("/locations/:id", this.onLocationDelete);
+        router.all("/locations", this.onLocations);
+
+        router.all("/order/all", this.onGetCars);
+
+        router.all("/register", this.onRegister);
 
         /*router.post("/register", [
             body("login", "Empty login").trim().isLength({ min: 4 }).escape(),
@@ -81,28 +95,57 @@ export class WebClientRouter
         res.redirect("/");
     }
 
-    public static async onCars(req: IMyRequest, res: express.Response)
+    public static async onGetCars(req: IMyRequest, res: express.Response)
     {
         const cars = await Car.All();
 
-        console.log(JSON.stringify(cars));
+        res.header("Content-Range", `cars 0-${cars.length}/${cars.length}`);
         res.json(cars);
-        // WebClientUtil.render(req, res, "register", {}, false);
+    }
+
+    public static async onCarGet(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await Car.GetById(id);
+        res.json(r.data);
+    }
+
+    public static async onCarInsert(req: IMyRequest, res: express.Response)
+    {
+        const car = req.body as Car;
+
+        console.log(car);
+
+        const r = await Car.Insert(car);
+
+        if (r.result) {
+            res.json(r.data);
+        }
     }
 
     public static async onCarUpdate(req: IMyRequest, res: express.Response)
     {
-        const car = JSON.parse(req.body) as Car;
+        let car = req.body as Car;
 
-        if (!car || !car.Id) {
+        if (!car || !car.id) {
             return;
         }
 
-        console.log(JSON.stringify(car));
         const r = await Car.Update(car);
 
+        if (!r.result) {
+            Logger.error(r.message);
+        }
+
+        car = (await Car.GetById(car.id)).data;
+        res.json(car);
+    }
+
+    public static async onCarDelete(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await Car.Delete(id);
         res.json(r);
-        // WebClientUtil.render(req, res, "register", {}, false);
     }
 
     public static async onCarsPopulated(req: IMyRequest, res: express.Response)
@@ -118,21 +161,110 @@ export class WebClientRouter
         // WebClientUtil.render(req, res, "register", {}, false);
     }
 
-    public static async onModels(req: IMyRequest, res: express.Response)
+    public static async onGetModels(req: IMyRequest, res: express.Response)
     {
         const models = await CarModel.All();
 
-        console.log(JSON.stringify(models));
+        res.header("Content-Range", `cars 0-${models.length}/${models.length}`);
         res.json(models);
         // WebClientUtil.render(req, res, "register", {}, false);
+    }
+
+    public static async onGetModel(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await CarModel.GetById(id);
+        res.json(r);
+    }
+
+    public static async onModelInsert(req: IMyRequest, res: express.Response)
+    {
+        const model = req.body as CarModel;
+
+        console.log(model);
+
+        const r = await CarModel.Insert(model);
+
+        if (r.result) {
+            res.json(r.data);
+        }
+    }
+
+    public static async onModelUpdate(req: IMyRequest, res: express.Response)
+    {
+        let model = req.body as CarModel;
+
+        if (!model || !model.id) {
+            return;
+        }
+
+        const r = await CarModel.Update(model);
+
+        if (!r.result) {
+            Logger.error(r.message);
+        }
+
+        model = (await CarModel.GetById(model.id));
+        res.json(model);
+    }
+
+    public static async onModelDelete(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await CarModel.Delete(id);
+        res.json(r);
     }
 
     public static async onLocations(req: IMyRequest, res: express.Response)
     {
         const locations = await Location.All();
 
-        console.log(JSON.stringify(locations));
+        res.header("Content-Range", `cars 0-${locations.length}/${locations.length}`);
         res.json(locations);
-        // WebClientUtil.render(req, res, "register", {}, false);
+    }
+
+    public static async onGetLocation(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await Location.GetById(id);
+        res.json(r);
+    }
+
+    public static async onLocationInsert(req: IMyRequest, res: express.Response)
+    {
+        const location = req.body as Location;
+
+        console.log(location);
+
+        const r = await Location.Insert(location);
+
+        if (r.result) {
+            res.json(r.data);
+        }
+    }
+
+    public static async onLocationUpdate(req: IMyRequest, res: express.Response)
+    {
+        let location = req.body as Location;
+
+        if (!location || !location.id) {
+            return;
+        }
+
+        const r = await Location.Update(location);
+
+        if (!r.result) {
+            Logger.error(r.message);
+        }
+
+        location = (await Location.GetById(location.id));
+        res.json(location);
+    }
+
+    public static async onLocationDelete(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await Location.Delete(id);
+        res.json(r);
     }
 }
