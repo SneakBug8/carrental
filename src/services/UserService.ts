@@ -8,7 +8,7 @@ export class UserService
     {
         const user = await User.GetByName(login);
 
-        if (!user.result || user.data.Password !== password) {
+        if (!user.result || user.data.password !== password) {
             return new Requisite().error("Неверные логин или пароль.");
         }
 

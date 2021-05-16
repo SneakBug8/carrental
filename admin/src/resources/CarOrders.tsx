@@ -5,7 +5,6 @@ import RichTextInput from "ra-input-rich-text";
 import BookIcon from "@material-ui/icons/Book";
 import { CarModel } from "../entities/CarModel";
 import { Car } from "../entities/Car";
-import { useDataProvider, Loading, Error } from 'react-admin';
 
 export const PostIcon = BookIcon;
 

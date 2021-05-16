@@ -7,6 +7,7 @@ import { CarsList, CarEdit, CarCreate, PostIcon } from "./resources/Cars";
 import { CarModelsList, CarModelEdit, CarModelCreate } from "./resources/CarModels";
 import { LocationsList, LocationEdit, LocationCreate } from "./resources/Locations";
 import { CarOrdersList, CarOrdersEdit, CarOrdersCreate } from "./resources/CarOrders";
+import { UsersList, UsersEdit, UsersCreate } from "./resources/Users";
 
 ReactDOM.render(
   (<React.StrictMode>
@@ -15,6 +16,7 @@ ReactDOM.render(
       <Resource name="models" list={CarModelsList} edit={CarModelEdit} create={CarModelCreate} icon={PostIcon} />
       <Resource name="locations" list={LocationsList} edit={LocationEdit} create={LocationCreate} icon={PostIcon} />
       <Resource name="orders" list={CarOrdersList} edit={CarOrdersEdit} create={CarOrdersCreate} icon={PostIcon}/>
+      <Resource name="users" list={UsersList} edit={UsersEdit} create={UsersCreate} icon={PostIcon}/>
 
     </Admin>
   </React.StrictMode>),

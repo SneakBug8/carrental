@@ -5,26 +5,31 @@ import { Requisite } from "services/Requisites/Requisite";
 
 export class User
 {
-    public Id: number;
-    public Login: string;
-    public Password: string;
-    public Role: number = 1;
+    public id: number;
+    public login: string;
+    public password: string;
+    public role: number = 1;
+    public phoneNumber: string;
+    public email: string;
 
     public static From(dbobject: any)
     {
         const res = new User();
-        res.Id = dbobject.Id;
-        res.Login = dbobject.Login;
-        res.Password = dbobject.Password;
-        res.Role = dbobject.Role;
+        res.id = dbobject.Id;
+        res.login = dbobject.Login;
+        res.password = dbobject.Password;
+        res.role = dbobject.Role;
+        res.phoneNumber = dbobject.PhoneNumber;
+        res.email = dbobject.Email;
 
         return res;
     }
 
-    public static async Create(login: string, password: string) {
+    public static async Create(login: string, password: string)
+    {
         const res = new User();
-        res.Login = login;
-        res.Password = password;
+        res.login = login;
+        res.password = password;
 
         await this.Insert(res);
 
@@ -73,24 +78,41 @@ export class User
 
     public static async Update(user: User)
     {
-        await UserRepository().where("Id", user.Id).update({
-            Login: user.Login,
-            Password: user.Password,
-            Role: user.Role,
-        });
+        try {
+            await UserRepository().where("Id", user.id).update({
+                Login: user.login,
+                Password: user.password,
+                Role: user.role,
+                PhoneNumber: user.phoneNumber,
+                Email: user.email,
+            });
+            return new Requisite(true);
+        }
+        catch (e) {
+            return new Requisite().error(e);
+        }
     }
 
-    public static async Insert(user: User): Promise<number>
+    public static async Insert(user: User): Promise<Requisite<User>>
     {
-        const d = await UserRepository().insert({
-            Login: user.Login,
-            Password: user.Password,
-            Role: user.Role,
-        });
+        try {
+            const d = await UserRepository().insert({
+                Login: user.login,
+                Password: user.password,
+                Role: user.role,
+                PhoneNumber: user.phoneNumber,
+                Email: user.email,
+            }).returning("Id");
 
-        Logger.info("Created user " + user.Id);
+            user.id = d[0];
 
-        return d[0];
+            Logger.info("Created user " + user.id);
+
+            return new Requisite(user);
+        }
+        catch (e) {
+            return new Requisite().error(e);
+        }
     }
 
     public static async Delete(id: number)

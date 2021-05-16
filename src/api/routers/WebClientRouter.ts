@@ -11,6 +11,7 @@ import { Location } from "entities/Location";
 import { Requisite } from "services/Requisites/Requisite";
 import { Logger } from "utility/Logger";
 import { CarOrder } from "entities/CarOrder";
+import { User } from "entities/User";
 
 export class WebClientRouter
 {
@@ -22,6 +23,7 @@ export class WebClientRouter
 
         router.use(bodyParser.urlencoded({ extended: true }));
 
+        // Cars
         router.get("/cars/:id", this.onCarGet);
         router.post("/cars", this.onCarInsert);
         router.put("/cars/:id", this.onCarUpdate);
@@ -30,23 +32,33 @@ export class WebClientRouter
 
         router.all("/car/all/populate", this.onCarsPopulated);
 
+        // CarModels
         router.get("/models/:id", this.onGetModel);
         router.post("/models", this.onModelInsert);
         router.put("/models/:id", this.onModelUpdate);
         router.delete("/models/:id", this.onModelDelete);
         router.all("/models", this.onGetModels);
 
+        // Locations
         router.get("/locations/:id", this.onGetLocation);
         router.post("/locations", this.onLocationInsert);
         router.put("/locations/:id", this.onLocationUpdate);
         router.delete("/locations/:id", this.onLocationDelete);
         router.all("/locations", this.onLocations);
 
+        // CarOrders
         router.get("/orders/:id", this.onGetOrder);
         router.post("/orders", this.onOrderInsert);
-        router.put("/orders/:id", this.onOrderInsert);
+        router.put("/orders/:id", this.onOrderUpdate);
         router.delete("/orders/:id", this.onOrderDelete);
         router.all("/orders", this.onOrders);
+
+        // Users
+        router.get("/users/:id", this.onGetUser);
+        router.post("/users", this.onInsertUser);
+        router.put("/users/:id", this.onUpdateUser);
+        router.delete("/users/:id", this.onDeleteUser);
+        router.all("/users", this.onUsers);
 
         router.all("/register", this.onRegister);
 
@@ -329,5 +341,63 @@ export class WebClientRouter
 
         location = (await CarOrder.GetById(location.id));
         res.json(location);
+    }
+
+    public static async onUsers(req: IMyRequest, res: express.Response)
+    {
+        const users = await User.All();
+
+        res.header("Content-Range", `users 0-${users.length}/${users.length}`);
+        res.json(users);
+    }
+
+    public static async onGetUser(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await User.GetById(id);
+        if (r.result) {
+            return res.json(r.data);
+        }
+        Logger.error(r.toString());
+    }
+
+    public static async onDeleteUser(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await User.Delete(id);
+        res.json(r);
+    }
+
+    public static async onInsertUser(req: IMyRequest, res: express.Response)
+    {
+        const user = req.body as User;
+
+        console.log(user);
+
+        const r = await User.Insert(user);
+
+        if (r.result) {
+            return res.json(r.data);
+        }
+
+        Logger.error(r.toString());
+    }
+
+    public static async onUpdateUser(req: IMyRequest, res: express.Response)
+    {
+        let user = req.body as User;
+
+        if (!user || !user.id) {
+            return;
+        }
+
+        const r = await User.Update(user);
+
+        if (!r.result) {
+            Logger.error(r.message);
+        }
+
+        user = (await User.GetById(user.id)).data;
+        res.json(user);
     }
 }
