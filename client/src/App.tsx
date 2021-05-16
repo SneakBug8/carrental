@@ -1,14 +1,23 @@
 import React from "react";
-import { Sidebar } from "./partials/Sidebar";
-import { Navbar } from "./partials/Navbar";
 import { Route, BrowserRouter as Router } from "react-router-dom";
+import { withStore } from "react-context-hook";
+import { MyRouter } from "./MyRouter";
 
-export class App extends React.Component
+const THE_STORE = "THE_STORE";
+
+function persistOnChange(store: any)
 {
-  public render()
-  {
-    return (
-      <div>{this.props.children}</div>
-    );
-  }
+  localStorage.setItem(THE_STORE, JSON.stringify(store));
 }
+
+const storeConfig = {
+  listener: persistOnChange,
+  logging: true,
+};
+
+const initialState = JSON.parse(/*localStorage.getItem(THE_STORE) || */ "{}") || {
+  models: [],
+  cars: [],
+};
+
+export const App = withStore(MyRouter, initialState, storeConfig);

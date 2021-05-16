@@ -4,35 +4,23 @@ import { Requisite } from "./Requisite";
 import { CarModel } from "./entities/CarModel";
 import { Location } from "./entities/Location";
 import { jquery } from ".";
+import { store } from 'react-context-hook';
 
 class StateClass
 {
-  public carsLoaded = false;
-  public cars: Car[] = [];
-
-  public modelsLoaded = false;
-  public models: CarModel[] = [];
-
-  public locationsLoaded = false;
-  public locations: Location[] = [];
-
-  public searchModelId: number = 0;
-  public searchModel?: CarModel;
-  public searchFrom: Date = new Date();
-  public searchFromString: string = "";
-  public searchTo: Date = new Date();
-  public searchToString: string = "";
-
   public async SearchCars()
   {
-    console.log("SearchCars");
+    let state = store.getState();
 
-    this.searchFromString = this.searchFrom.toDateString();
-    this.searchToString = this.searchTo.toDateString();
-    const res = await API.SearchCars(this.searchModelId, this.searchFromString, this.searchToString);
+    store.set("searchFromString", state.searchFrom.toDateString());
+    store.set("searchToString", state.searchTo.toDateString());
 
-    this.searchModel = this.models.find(x => x.id === this.searchModelId);
-    console.log(res);
+    state = store.getState();
+
+    const res = await API.SearchCars(state.searchModelId, state.searchFromString, state.searchToString);
+
+    const models = (await this.GetModels()).data;
+    store.set("searchModel", models.find((x: CarModel) => x.id === state.searchModelId));
 
     if (!res.result) {
       return res;
@@ -43,8 +31,10 @@ class StateClass
 
   public async GetCars()
   {
-    if (this.carsLoaded) {
-      return new Requisite(this.cars);
+    const state = store.getState();
+
+    if (state.carsLoaded) {
+      return new Requisite(state.cars);
     }
 
     const res = await API.GetCarsPopulate();
@@ -53,16 +43,18 @@ class StateClass
       return res;
     }
 
-    this.cars = res.data as Car[];
-    this.carsLoaded = true;
+    store.set("cars", res.data as Car[]);
+    store.set("carsLoaded", true);
 
     return res;
   }
 
   public async GetModels()
   {
-    if (this.modelsLoaded) {
-      return new Requisite(this.models);
+    const state = store.getState();
+
+    if (state.modelsLoaded) {
+      return new Requisite(state.models);
     }
 
     const res = await API.GetModels();
@@ -71,16 +63,18 @@ class StateClass
       return res;
     }
 
-    this.models = res.data as CarModel[];
-    this.modelsLoaded = true;
+    store.set("models", res.data as CarModel[]);
+    store.set("modelsLoaded", true);
 
     return res;
   }
 
   public async GetLocations()
   {
-    if (this.locationsLoaded) {
-      return new Requisite(this.locations);
+    const state = store.getState();
+
+    if (state.locationsLoaded) {
+      return new Requisite(state.locations);
     }
 
     const res = await API.GetLocations();
@@ -89,8 +83,8 @@ class StateClass
       return res;
     }
 
-    this.locations = res.data as Location[];
-    this.locationsLoaded = true;
+    store.set("locations", res.data as Location[]);
+    store.set("locationsLoaded", true);
 
     return res;
   }

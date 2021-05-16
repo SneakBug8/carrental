@@ -21,7 +21,6 @@ export class CarsView extends React.Component<{}, { cars: Car[], error: Requisit
   {
     State.GetCars().then((response) =>
     {
-      console.log(response.data);
       this.setState({
         cars: response.data || new Array<Car>(),
       });
