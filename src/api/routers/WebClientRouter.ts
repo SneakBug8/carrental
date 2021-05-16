@@ -2,7 +2,6 @@ import * as express from "express";
 import { body, param, query, validationResult } from "express-validator";
 import * as bodyParser from "body-parser";
 import { Config } from "config";
-import { Player } from "entities/example";
 import { FactoryManagementService } from "services/example";
 import { IMyRequest, WebClientUtil } from "../WebClientUtil";
 import { Car } from "entities/Car";
@@ -12,6 +11,8 @@ import { Requisite } from "services/Requisites/Requisite";
 import { Logger } from "utility/Logger";
 import { CarOrder } from "entities/CarOrder";
 import { User } from "entities/User";
+import { ParseAdminQuery } from "utility/AdminQuery";
+import { CarService } from "services/CarService";
 
 export class WebClientRouter
 {
@@ -24,13 +25,14 @@ export class WebClientRouter
         router.use(bodyParser.urlencoded({ extended: true }));
 
         // Cars
+        router.get("/cars/search", this.onCarsSearch);
+
+        router.all("/cars/populate", this.onCarsPopulated);
         router.get("/cars/:id", this.onCarGet);
         router.post("/cars", this.onCarInsert);
         router.put("/cars/:id", this.onCarUpdate);
         router.delete("/cars/:id", this.onCarDelete);
         router.all("/cars", this.onGetCars);
-
-        router.all("/car/all/populate", this.onCarsPopulated);
 
         // CarModels
         router.get("/models/:id", this.onGetModel);
@@ -47,6 +49,8 @@ export class WebClientRouter
         router.all("/locations", this.onLocations);
 
         // CarOrders
+        router.get("/orders/filter", this.onOrdersFilter);
+
         router.get("/orders/:id", this.onGetOrder);
         router.post("/orders", this.onOrderInsert);
         router.put("/orders/:id", this.onOrderUpdate);
@@ -61,6 +65,8 @@ export class WebClientRouter
         router.all("/users", this.onUsers);
 
         router.all("/register", this.onRegister);
+
+        router.all(new RegExp(".*"), this.on404);
 
         /*router.post("/register", [
             body("login", "Empty login").trim().isLength({ min: 4 }).escape(),
@@ -96,6 +102,12 @@ export class WebClientRouter
         // WebClientUtil.render(req, res, "register", {}, false);
     }
 
+    public static on404(req: IMyRequest, res: express.Response)
+    {
+        res.json(new Requisite().code(404).error("Not found").toJSON());
+        // WebClientUtil.render(req, res, "register", {}, false);
+    }
+
     public static async registerAction(req: IMyRequest, res: express.Response)
     {
         const errors = validationResult(req);
@@ -114,9 +126,20 @@ export class WebClientRouter
 
     public static async onGetCars(req: IMyRequest, res: express.Response)
     {
-        const cars = await Car.All();
+        const cars = await Car.GetMany(req.query);
 
-        res.header("Content-Range", `cars 0-${cars.length}/${cars.length}`);
+        const adminquery = ParseAdminQuery(req.query);
+        const count = await Car.Count();
+
+        res.header("Content-Range", `cars ${adminquery.from}-${adminquery.to}/${count}`);
+        res.json(cars);
+    }
+
+    public static async onCarsSearch(req: IMyRequest, res: express.Response)
+    {
+        const date = JSON.parse(req.query.date as string);
+        const modelId = Number.parseInt(req.query.modelId as string, 10);
+        const cars = await CarService.GetAvailableCars(modelId, new Date(date[0]), new Date(date[1]));
         res.json(cars);
     }
 
@@ -181,11 +204,13 @@ export class WebClientRouter
 
     public static async onGetModels(req: IMyRequest, res: express.Response)
     {
-        const models = await CarModel.All();
+        const models = await CarModel.GetMany(req.query);
 
-        res.header("Content-Range", `cars 0-${models.length}/${models.length}`);
+        const adminquery = ParseAdminQuery(req.query);
+        const count = await CarModel.Count();
+
+        res.header("Content-Range", `models ${adminquery.from}-${adminquery.to}/${count}`);
         res.json(models);
-        // WebClientUtil.render(req, res, "register", {}, false);
     }
 
     public static async onGetModel(req: IMyRequest, res: express.Response)
@@ -236,9 +261,12 @@ export class WebClientRouter
 
     public static async onLocations(req: IMyRequest, res: express.Response)
     {
-        const locations = await Location.All();
+        const locations = await CarModel.GetMany(req.query);
 
-        res.header("Content-Range", `locations 0-${locations.length}/${locations.length}`);
+        const adminquery = ParseAdminQuery(req.query);
+        const count = await CarModel.Count();
+
+        res.header("Content-Range", `locations ${adminquery.from}-${adminquery.to}/${count}`);
         res.json(locations);
     }
 
@@ -290,10 +318,19 @@ export class WebClientRouter
 
     public static async onOrders(req: IMyRequest, res: express.Response)
     {
-        const locations = await CarOrder.All();
+        const orders = await CarOrder.GetMany(req.query);
 
-        res.header("Content-Range", `orders 0-${locations.length}/${locations.length}`);
-        res.json(locations);
+        const adminquery = ParseAdminQuery(req.query);
+        const count = await CarOrder.Count();
+
+        res.header("Content-Range", `orders ${adminquery.from}-${adminquery.to}/${count}`);
+        res.json(orders);
+    }
+
+    public static async onOrdersFilter(req: IMyRequest, res: express.Response)
+    {
+        const orders = await CarOrder.GetManyReact(req.query);
+        res.json(orders);
     }
 
     public static async onGetOrder(req: IMyRequest, res: express.Response)
@@ -345,9 +382,12 @@ export class WebClientRouter
 
     public static async onUsers(req: IMyRequest, res: express.Response)
     {
-        const users = await User.All();
+        const users = await User.GetMany(req.query);
 
-        res.header("Content-Range", `users 0-${users.length}/${users.length}`);
+        const adminquery = ParseAdminQuery(req.query);
+        const count = await User.Count();
+
+        res.header("Content-Range", `users ${adminquery.from}-${adminquery.to}/${count}`);
         res.json(users);
     }
 

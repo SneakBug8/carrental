@@ -4,6 +4,8 @@ import { Config } from "config";
 import { Requisite } from "services/Requisites/Requisite";
 import { CarModel } from "./CarModel";
 import { Location } from "./Location";
+import { ConvertAdminQuery } from "utility/AdminQuery";
+import { CarService } from "services/CarService";
 
 export class Car
 {
@@ -67,21 +69,21 @@ export class Car
         return new Requisite<Car>().error("No such car");
     }
 
-    public static async GetWithLocation(name: string)
+    public static async GetWithLocation(id: number)
     {
-        const data = await CarRepository().select().where("LocationId", name);
+        const data = await CarRepository().select().where("LocationId", id);
         return this.UseQuery(data);
     }
 
-    public static async GetWithModel(name: string)
+    public static async GetWithModel(id: number)
     {
-        const data = await CarRepository().select().where("ModelId", name);
+        const data = await CarRepository().select().where("ModelId", id);
         return this.UseQuery(data);
     }
 
     public static async Count(): Promise<number>
     {
-        const data = await CarRepository().count("Name as c").first() as any;
+        const data = await CarRepository().count("Id as c").first() as any;
 
         if (data) {
             return data.c;
@@ -163,6 +165,12 @@ export class Car
     public static async All(): Promise<Car[]>
     {
         const data = await CarRepository().select();
+        return this.UseQuery(data);
+    }
+
+    public static async GetMany(query: any): Promise<Car[]>
+    {
+        const data = await ConvertAdminQuery(query, CarRepository().select());
         return this.UseQuery(data);
     }
 }

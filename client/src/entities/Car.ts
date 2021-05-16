@@ -3,9 +3,11 @@ import { Location } from "./Location";
 
 export class Car
 {
-    public Id: string = "";
-    public ModelName: string = "";
-    public LocationName: string = "";
+    public id: number = 0;
+    public modelId: number = 0;
+    public locationId: number = 0;
+
+    public color: string = "";
 
     public Model: CarModel | null = null;
     public Location: Location | null = null;

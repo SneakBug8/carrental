@@ -1,7 +1,7 @@
 import { Result } from "express-validator";
 
 export class Requisite<T = null> {
-    public code: number = 1;
+    private _code: number = 1;
     public data: T;
     public result: boolean = false;
     public message: string = "";
@@ -41,11 +41,16 @@ export class Requisite<T = null> {
         return `Requisite(${this.result}): ${this.message}`;
     }
 
-    public toJSON(code: number)
+    public code(code: number) {
+        this._code = code;
+        return this;
+    }
+
+    public toJSON()
     {
         return JSON.stringify({
             error: {
-                code,
+                code: this._code,
                 message: this.message,
             },
             data: this.data,
@@ -57,7 +62,7 @@ export class Requisite<T = null> {
         const temp = JSON.parse(json);
         this.message = temp.error.message || this.message;
         this.data = temp.data || null;
-        this.code = temp.code || this.code;
+        this._code = temp.code || this._code;
         return this;
     }
 }

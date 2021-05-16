@@ -4,8 +4,9 @@ import { CarPartial } from "../partials/Car";
 import { State } from "../State";
 import { Requisite } from "../Requisite";
 import { ErrorMessage } from "../partials/ErrorMessage";
+import { CarCard } from "../partials/CarCard";
 
-export class CarsView extends React.Component<{}, {cars: Car[], error: Requisite}>
+export class CarsView extends React.Component<{}, { cars: Car[], error: Requisite }>
 {
   constructor(props: {})
   {
@@ -16,28 +17,52 @@ export class CarsView extends React.Component<{}, {cars: Car[], error: Requisite
     };
   }
 
-  componentDidMount() {
-    State.GetCars().then((response) => {
+  componentDidMount()
+  {
+    State.GetCars().then((response) =>
+    {
       console.log(response.data);
       this.setState({
         cars: response.data || new Array<Car>(),
       });
     })
-    .catch((response) => {
-      this.setState({
-        error: response,
+      .catch((response) =>
+      {
+        this.setState({
+          error: response,
+        });
       });
-    });
   }
 
   render()
   {
     return (
-      <div>
-        <ErrorMessage requisite={this.state.error}/>
-            {!this.state.cars.length ? (<p>Нет доступных автомобилей.</p>) : ""}
-            {this.state.cars.map((car) => (<CarPartial key={car.Id} car={car}/>))}
+      <main>
+        <div className="hero inner-page" style={{ backgroundImage: "url('images/hero_1_a.jpg')" }}>
+        <div className="container">
+          <div className="row align-items-end ">
+            <div className="col-lg-5">
+              <div className="intro">
+                <h1><strong>Listings</strong></h1>
+              </div>
+            </div>
           </div>
+        </div>
+        </div>
+      <div className="site-section bg-light">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-7">
+              <h2 className="section-heading"><strong>Car Listings</strong></h2>
+              <p className="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            </div>
+          </div>
+          <div className="row">
+            {this.state.cars.map(e => <CarCard car={e} key={e.id} />)}
+          </div>
+        </div>
+      </div>
+      </main >
     );
   }
 }

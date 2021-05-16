@@ -1,10 +1,8 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, useRouteMatch, withRouter, Switch } from "react-router-dom";
-
-import { App } from "./App";
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Home } from "./views/Home";
 import { CarsView } from "./views/Cars";
-import { AdminRouter } from "./views/admin/AdminRouter";
+import { SearchView } from "./views/Search";
 
 export class MyRouterClass extends React.Component<any>
 {
@@ -13,15 +11,9 @@ export class MyRouterClass extends React.Component<any>
     return (
       <Router>
         <Switch>
-          <Route path={`/admin`} component={AdminRouter} />
-          <Route path="/">
-            <App>
-              <Switch>
-                <Route path="/cars" component={CarsView} />
-                <Route component={Home} />
-              </Switch>
-            </App>
-          </Route>
+          <Route path="/cars" render={routeProps => <CarsView {...this.props} {...routeProps} />} />
+          <Route path="/search" render={routeProps => <SearchView {...this.props} {...routeProps} />} />
+          <Route render={routeProps => <Home {...this.props} {...routeProps} />} />
         </Switch>
       </Router>
     );

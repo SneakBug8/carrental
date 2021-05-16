@@ -1,6 +1,7 @@
 export class CarModel
 {
-    public Name: string = "";
-    public Photo: string = "";
-    public Description: string = "";
+    public id: number = 0;
+    public name: string = "";
+    public photo: string = "";
+    public description: string = "";
 }

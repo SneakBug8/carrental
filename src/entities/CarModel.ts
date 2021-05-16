@@ -2,6 +2,7 @@ import { Connection } from "DataBase";
 import { Logger } from "utility/Logger";
 import { Config } from "config";
 import { Requisite } from "services/Requisites/Requisite";
+import { ConvertAdminQuery } from "utility/AdminQuery";
 
 export class CarModel
 {
@@ -134,6 +135,12 @@ export class CarModel
     public static async All(): Promise<CarModel[]>
     {
         const data = await CarModelRepository().select();
+        return this.UseQuery(data);
+    }
+
+    public static async GetMany(query: any): Promise<CarModel[]>
+    {
+        const data = await ConvertAdminQuery(query, CarModelRepository().select());
         return this.UseQuery(data);
     }
 }

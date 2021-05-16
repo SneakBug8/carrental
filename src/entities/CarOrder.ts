@@ -2,6 +2,8 @@ import { Connection } from "DataBase";
 import { Logger } from "utility/Logger";
 import { Config } from "config";
 import { Requisite } from "services/Requisites/Requisite";
+import { ConvertAdminQuery } from "utility/AdminQuery";
+import { CarOrdersService } from "services/CarOrdersService";
 
 export class CarOrder
 {
@@ -130,6 +132,25 @@ export class CarOrder
     public static async All(): Promise<CarOrder[]>
     {
         const data = await CarOrderRepository().select();
+        return this.UseQuery(data);
+    }
+
+    public static async GetOrdersForCarWithinTimeframe(carId: number, from: Date, to: Date): Promise<CarOrder[]>
+    {
+        const data = await CarOrderRepository().select()
+        .where("CarId", carId).andWhere("From", ">", from).andWhere("To", "<", to);
+        return this.UseQuery(data);
+    }
+
+    public static async GetMany(query: any): Promise<CarOrder[]>
+    {
+        const data = await ConvertAdminQuery(query, CarOrderRepository().select());
+        return this.UseQuery(data);
+    }
+
+    public static async GetManyReact(query: any): Promise<CarOrder[]>
+    {
+        const data = await CarOrdersService.ConvertReactQuery(query, CarOrderRepository().select());
         return this.UseQuery(data);
     }
 }

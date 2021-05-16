@@ -23,9 +23,16 @@ app.listen(port, () =>
 
 app.use((req, res, next) =>
 {
+    if (!req.url.startsWith("/api")) {
+        return;
+    }
+
     Logger.info(req.method + " to " + req.url);
-    if (req.body !== {}) {
+    if (Object.keys(req.body).length) {
         Logger.info(JSON.stringify(req.body));
+    }
+    if (Object.keys(req.query).length) {
+        Logger.info(JSON.stringify(req.query));
     }
     next();
 });

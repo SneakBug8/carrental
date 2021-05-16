@@ -2,6 +2,7 @@ import { Connection } from "DataBase";
 import { Logger } from "utility/Logger";
 import { Config } from "config";
 import { Requisite } from "services/Requisites/Requisite";
+import { ConvertAdminQuery } from "utility/AdminQuery";
 
 export class Location
 {
@@ -124,6 +125,12 @@ export class Location
     public static async All(): Promise<Location[]>
     {
         const data = await LocationRepository().select();
+        return this.UseQuery(data);
+    }
+
+    public static async GetMany(query: any): Promise<Location[]>
+    {
+        const data = await ConvertAdminQuery(query, LocationRepository().select());
         return this.UseQuery(data);
     }
 }

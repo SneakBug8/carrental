@@ -2,6 +2,7 @@ import { Connection } from "DataBase";
 import { Logger } from "utility/Logger";
 import { Config } from "config";
 import { Requisite } from "services/Requisites/Requisite";
+import { ConvertAdminQuery } from "utility/AdminQuery";
 
 export class User
 {
@@ -144,6 +145,12 @@ export class User
     public static async All(): Promise<User[]>
     {
         const data = await UserRepository().select();
+        return this.UseQuery(data);
+    }
+
+    public static async GetMany(query: any): Promise<User[]>
+    {
+        const data = await ConvertAdminQuery(query, UserRepository().select());
         return this.UseQuery(data);
     }
 }
