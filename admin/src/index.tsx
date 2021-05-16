@@ -6,13 +6,16 @@ import restProvider from "ra-data-simple-rest";
 import { CarsList, CarEdit, CarCreate, PostIcon } from "./resources/Cars";
 import { CarModelsList, CarModelEdit, CarModelCreate } from "./resources/CarModels";
 import { LocationsList, LocationEdit, LocationCreate } from "./resources/Locations";
+import { CarOrdersList, CarOrdersEdit, CarOrdersCreate } from "./resources/CarOrders";
 
 ReactDOM.render(
   (<React.StrictMode>
     <Admin dataProvider={restProvider("/api")}>
       <Resource name="cars" list={CarsList} edit={CarEdit} create={CarCreate} icon={PostIcon} />
       <Resource name="models" list={CarModelsList} edit={CarModelEdit} create={CarModelCreate} icon={PostIcon} />
-      <Resource name="locations" list={LocationsList} edit={LocationEdit} create={LocationCreate} icon={PostIcon}/>
+      <Resource name="locations" list={LocationsList} edit={LocationEdit} create={LocationCreate} icon={PostIcon} />
+      <Resource name="orders" list={CarOrdersList} edit={CarOrdersEdit} create={CarOrdersCreate} icon={PostIcon}/>
+
     </Admin>
   </React.StrictMode>),
   document.getElementById("root")

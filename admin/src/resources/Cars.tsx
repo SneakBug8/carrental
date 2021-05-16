@@ -1,6 +1,6 @@
 // in posts.js
 import * as React from "react";
-import { List, Datagrid, Edit, Create, SimpleForm, TextField, EditButton, TextInput } from "react-admin";
+import { List, Datagrid, Edit, Create, SimpleForm, TextField, EditButton, TextInput, ReferenceField, ReferenceInput, SelectInput } from "react-admin";
 import BookIcon from "@material-ui/icons/Book";
 import { Car } from "../entities/Car";
 
@@ -10,8 +10,12 @@ export const CarsList = (props : any) => (
     <List {...props}>
         <Datagrid>
             <TextField source="id" />
-            <TextField source="modelId" />
-            <TextField source="locationId" />
+            <ReferenceField label="Model" source="modelId" reference="models">
+                <TextField source="name" />
+            </ReferenceField>
+            <ReferenceField label="Location" source="locationId" reference="locations">
+                <TextField source="name" />
+            </ReferenceField>
             <TextField source="color" />
             <EditButton basePath="/cars" />
         </Datagrid>
@@ -26,8 +30,12 @@ export const CarEdit = (props: any) => (
     <Edit title={<CarTitle/>} {...props}>
         <SimpleForm>
             <TextInput disabled source="id" />
-            <TextInput source="modelId" />
-            <TextInput source="locationId" />
+            <ReferenceInput label="Model" source="modelId" reference="models">
+                <SelectInput optionText="name" />
+            </ReferenceInput>
+            <ReferenceInput label="Location" source="locationId" reference="locations">
+                <SelectInput optionText="name" />
+            </ReferenceInput>
             <TextInput source="color" />
         </SimpleForm>
     </Edit>
@@ -36,8 +44,12 @@ export const CarEdit = (props: any) => (
 export const CarCreate = (props: any) => (
     <Create title="Create a Car" {...props}>
         <SimpleForm>
-            <TextInput source="modelId" />
-            <TextInput source="locationId" />
+            <ReferenceInput label="Model" source="modelId" reference="models">
+                <SelectInput optionText="name" />
+            </ReferenceInput>
+            <ReferenceInput label="Location" source="locationId" reference="locations">
+                <SelectInput optionText="name" />
+            </ReferenceInput>
             <TextInput source="color" />
         </SimpleForm>
     </Create>

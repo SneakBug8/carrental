@@ -10,6 +10,7 @@ import { CarModel } from "entities/CarModel";
 import { Location } from "entities/Location";
 import { Requisite } from "services/Requisites/Requisite";
 import { Logger } from "utility/Logger";
+import { CarOrder } from "entities/CarOrder";
 
 export class WebClientRouter
 {
@@ -41,7 +42,11 @@ export class WebClientRouter
         router.delete("/locations/:id", this.onLocationDelete);
         router.all("/locations", this.onLocations);
 
-        router.all("/order/all", this.onGetCars);
+        router.get("/orders/:id", this.onGetOrder);
+        router.post("/orders", this.onOrderInsert);
+        router.put("/orders/:id", this.onOrderInsert);
+        router.delete("/orders/:id", this.onOrderDelete);
+        router.all("/orders", this.onOrders);
 
         router.all("/register", this.onRegister);
 
@@ -119,8 +124,9 @@ export class WebClientRouter
         const r = await Car.Insert(car);
 
         if (r.result) {
-            res.json(r.data);
+            return res.json(r.data);
         }
+        Logger.error(r.toString());
     }
 
     public static async onCarUpdate(req: IMyRequest, res: express.Response)
@@ -186,8 +192,9 @@ export class WebClientRouter
         const r = await CarModel.Insert(model);
 
         if (r.result) {
-            res.json(r.data);
+            return res.json(r.data);
         }
+        Logger.error(r.toString());
     }
 
     public static async onModelUpdate(req: IMyRequest, res: express.Response)
@@ -219,7 +226,7 @@ export class WebClientRouter
     {
         const locations = await Location.All();
 
-        res.header("Content-Range", `cars 0-${locations.length}/${locations.length}`);
+        res.header("Content-Range", `locations 0-${locations.length}/${locations.length}`);
         res.json(locations);
     }
 
@@ -239,8 +246,9 @@ export class WebClientRouter
         const r = await Location.Insert(location);
 
         if (r.result) {
-            res.json(r.data);
+            return res.json(r.data);
         }
+        Logger.error(r.toString());
     }
 
     public static async onLocationUpdate(req: IMyRequest, res: express.Response)
@@ -266,5 +274,60 @@ export class WebClientRouter
         const id = Number.parseInt(req.params.id, 10);
         const r = await Location.Delete(id);
         res.json(r);
+    }
+
+    public static async onOrders(req: IMyRequest, res: express.Response)
+    {
+        const locations = await CarOrder.All();
+
+        res.header("Content-Range", `orders 0-${locations.length}/${locations.length}`);
+        res.json(locations);
+    }
+
+    public static async onGetOrder(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await CarOrder.GetById(id);
+        res.json(r);
+    }
+
+    public static async onOrderDelete(req: IMyRequest, res: express.Response)
+    {
+        const id = Number.parseInt(req.params.id, 10);
+        const r = await CarOrder.Delete(id);
+        res.json(r);
+    }
+
+    public static async onOrderInsert(req: IMyRequest, res: express.Response)
+    {
+        const location = req.body as CarOrder;
+
+        console.log(location);
+
+        const r = await CarOrder.Insert(location);
+
+        if (r.result) {
+            return res.json(r.data);
+        }
+
+        Logger.error(r.toString());
+    }
+
+    public static async onOrderUpdate(req: IMyRequest, res: express.Response)
+    {
+        let location = req.body as CarOrder;
+
+        if (!location || !location.id) {
+            return;
+        }
+
+        const r = await CarOrder.Update(location);
+
+        if (!r.result) {
+            Logger.error(r.message);
+        }
+
+        location = (await CarOrder.GetById(location.id));
+        res.json(location);
     }
 }

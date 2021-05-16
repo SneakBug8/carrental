@@ -5,30 +5,31 @@ import { Requisite } from "services/Requisites/Requisite";
 
 export class CarOrder
 {
-    public Id: string;
-    public CarName: string;
-    public From: Date;
-    public To: Date;
-    public CustomerName: string;
+    public id: number;
+    public carId: number;
+    public from: Date;
+    public to: Date;
+    public customerName: string;
 
     public static From(dbobject: any)
     {
         const res = new CarOrder();
-        res.Id = dbobject.Id;
-        res.CarName = dbobject.Car;
-        res.From = new Date(dbobject.From);
-        res.To = new Date(dbobject.To);
-        res.CustomerName = dbobject.Customer;
+        res.id = dbobject.Id;
+        res.carId = dbobject.CarId;
+        res.from = new Date(dbobject.From);
+        res.to = new Date(dbobject.To);
+        res.customerName = dbobject.Customer;
 
         return res;
     }
 
-    public static async Create(CarName: string, From: Date, To: Date, CustomerName: string) {
+    public static async Create(CarId: number, From: Date, To: Date, CustomerName: string)
+    {
         const res = new CarOrder();
-        res.CarName = CarName;
-        res.From = From;
-        res.To = To;
-        res.CustomerName = CustomerName;
+        res.carId = CarId;
+        res.from = From;
+        res.to = To;
+        res.customerName = CustomerName;
 
         await this.Insert(res);
 
@@ -66,35 +67,41 @@ export class CarOrder
 
     public static async Update(order: CarOrder)
     {
-        /*
-        res.Id = dbobject.Id;
-        res.CarName = dbobject.Car;
-        res.From = new Date(dbobject.From);
-        res.To = new Date(dbobject.To);
-        res.CustomerName = dbobject.Customer;
-        */
-        await CarOrderRepository().where("Id", order.Id).update({
-            Id: order.Id,
-            Car: order.CarName,
-            From: order.From,
-            To: order.To,
-            Customer: order.CustomerName,
-        });
+        try {
+            await CarOrderRepository().where("Id", order.id).update({
+                Id: order.id,
+                CarId: order.carId,
+                From: new Date(order.from),
+                To: new Date(order.to),
+                CustomerId: order.customerName,
+            });
+            return new Requisite(true);
+        }
+        catch (e) {
+            return new Requisite().error(e);
+        }
     }
 
-    public static async Insert(order: CarOrder): Promise<number>
+    public static async Insert(order: CarOrder): Promise<Requisite<CarOrder>>
     {
-        const d = await CarOrderRepository().insert({
-            Id: order.Id,
-            Car: order.CarName,
-            From: order.From,
-            To: order.To,
-            Customer: order.CustomerName,
-        });
+        try {
+            const d = await CarOrderRepository().insert({
+                Id: order.id,
+                CarId: order.carId,
+                From: new Date(order.from),
+                To: new Date(order.to),
+                CustomerId: order.customerName,
+            }).returning("Id");
 
-        Logger.info("Created CarOrder " + order.Id);
+            order.id = d[0];
 
-        return d[0];
+            Logger.info("Created CarOrder " + order.id);
+
+            return new Requisite(order);
+        }
+        catch (e) {
+            return new Requisite().error(e);
+        }
     }
 
     public static async Delete(id: number)
