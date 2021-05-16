@@ -261,10 +261,10 @@ export class WebClientRouter
 
     public static async onLocations(req: IMyRequest, res: express.Response)
     {
-        const locations = await CarModel.GetMany(req.query);
+        const locations = await Location.GetMany(req.query);
 
         const adminquery = ParseAdminQuery(req.query);
-        const count = await CarModel.Count();
+        const count = await Location.Count();
 
         res.header("Content-Range", `locations ${adminquery.from}-${adminquery.to}/${count}`);
         res.json(locations);

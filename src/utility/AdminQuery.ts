@@ -1,4 +1,5 @@
 import knex from "knex";
+import { isArray } from "util";
 
 interface IAdminQuery
 {
@@ -36,6 +37,26 @@ export function ConvertAdminQuery(input: any, query: any)
     if (range.length === 2) {
       query.where("Id", ">", range[0]);
       query.where("Id", "<", range[1]);
+    }
+  }
+  if (input.filter) {
+    const obj = JSON.parse(input.filter);
+
+    if (Object.keys(obj).length > 0) {
+      const filters = Object.entries(obj);
+
+      for (const filter of filters) {
+        const key = filter[0][0].toUpperCase() + (filter[0] as string).substring(1);
+
+        if (isArray(filter[1])) {
+          for (const value of filter[1]) {
+            query = query.orWhere(key, value);
+          }
+        }
+        else {
+          query = query.orWhere(key, filter[1]);
+        }
+      }
     }
   }
   if (input.sort) {
