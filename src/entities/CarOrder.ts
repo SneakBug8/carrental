@@ -129,6 +129,11 @@ export class CarOrder
         return [];
     }
 
+    public static async Select()
+    {
+        return CarOrderRepository().select();
+    }
+
     public static async All(): Promise<CarOrder[]>
     {
         const data = await CarOrderRepository().select();
@@ -145,12 +150,6 @@ export class CarOrder
     public static async GetMany(query: any): Promise<CarOrder[]>
     {
         const data = await ConvertAdminQuery(query, CarOrderRepository().select());
-        return this.UseQuery(data);
-    }
-
-    public static async GetManyReact(query: any): Promise<CarOrder[]>
-    {
-        const data = await CarOrdersService.ConvertReactQuery(query, CarOrderRepository().select());
         return this.UseQuery(data);
     }
 }

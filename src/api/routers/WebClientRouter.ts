@@ -13,6 +13,7 @@ import { CarOrder } from "entities/CarOrder";
 import { User } from "entities/User";
 import { ParseAdminQuery } from "utility/AdminQuery";
 import { CarService } from "services/CarService";
+import { CarOrdersService } from "services/CarOrdersService";
 
 export class WebClientRouter
 {
@@ -329,7 +330,7 @@ export class WebClientRouter
 
     public static async onOrdersFilter(req: IMyRequest, res: express.Response)
     {
-        const orders = await CarOrder.GetManyReact(req.query);
+        const orders = await CarOrdersService.ProcessReactQuery(req.query);
         res.json(orders);
     }
 
