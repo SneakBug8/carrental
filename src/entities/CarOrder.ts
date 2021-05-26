@@ -11,7 +11,7 @@ export class CarOrder
     public carId: number;
     public from: Date;
     public to: Date;
-    public customerName: string;
+    public customerId: number;
 
     public static From(dbobject: any)
     {
@@ -20,18 +20,18 @@ export class CarOrder
         res.carId = dbobject.CarId;
         res.from = new Date(dbobject.From);
         res.to = new Date(dbobject.To);
-        res.customerName = dbobject.Customer;
+        res.customerId = dbobject.Customer;
 
         return res;
     }
 
-    public static async Create(CarId: number, From: Date, To: Date, CustomerName: string)
+    public static async Create(CarId: number, From: Date, To: Date, UserId: number)
     {
         const res = new CarOrder();
         res.carId = CarId;
         res.from = From;
         res.to = To;
-        res.customerName = CustomerName;
+        res.customerId = UserId;
 
         await this.Insert(res);
 
@@ -69,13 +69,16 @@ export class CarOrder
 
     public static async Update(order: CarOrder)
     {
+        if (new Date(order.from) > new Date(order.to)) {
+            return new Requisite().code(501).error("Wrong dates on Order");
+        }
         try {
             await CarOrderRepository().where("Id", order.id).update({
                 Id: order.id,
                 CarId: order.carId,
                 From: new Date(order.from),
                 To: new Date(order.to),
-                CustomerId: order.customerName,
+                CustomerId: order.customerId,
             });
             return new Requisite(true);
         }
@@ -86,13 +89,16 @@ export class CarOrder
 
     public static async Insert(order: CarOrder): Promise<Requisite<CarOrder>>
     {
+        if (new Date(order.from) > new Date(order.to)) {
+            return new Requisite().code(501).error("Wrong dates on Order");
+        }
         try {
             const d = await CarOrderRepository().insert({
                 Id: order.id,
                 CarId: order.carId,
                 From: new Date(order.from),
                 To: new Date(order.to),
-                CustomerId: order.customerName,
+                CustomerId: order.customerId,
             }).returning("Id");
 
             order.id = d[0];
@@ -143,7 +149,8 @@ export class CarOrder
     public static async GetOrdersForCarWithinTimeframe(carId: number, from: Date, to: Date): Promise<CarOrder[]>
     {
         const data = await CarOrderRepository().select()
-        .where("CarId", carId).andWhere("From", ">", from).andWhere("To", "<", to);
+            .where("CarId", carId).whereRaw(`("From", "To") overlaps (?, ?)`, [from, to]);
+
         return this.UseQuery(data);
     }
 

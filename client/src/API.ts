@@ -3,6 +3,7 @@ import { Requisite } from "./Requisite";
 import { Car } from "./entities/Car";
 import { CarModel } from "./entities/CarModel";
 import { Location } from "./entities/Location";
+import { CarOrder } from "./entities/CarOrder";
 
 export class API
 {
@@ -63,6 +64,58 @@ export class API
     }
     catch (e) {
       return new Requisite<Car[]>().error(e);
+    }
+  }
+
+  public static async Register(login: string, password: string, phone: string, email: string)
+  {
+    try {
+      const resp = await axios.post(`/api/register`, {
+        login,
+        password,
+        phone,
+        email,
+      });
+
+      return new Requisite(resp.data) as Requisite<{userId: number}>;
+    }
+    catch (e) {
+      return new Requisite().error(e);
+    }
+  }
+
+  public static async Auth(login: string, password: string)
+  {
+    try {
+      const resp = await axios.post(`/api/auth`, {
+        login,
+        password,
+      });
+
+      return new Requisite(resp.data) as Requisite<{userId: number}>;
+    }
+    catch (e) {
+      return new Requisite().error(e);
+    }
+  }
+
+  public static async Rent(login: string, password: string, carId: number, from: Date, to: Date)
+  {
+    try {
+      const resp = await axios.post(`/api/rent`, {
+        login,
+        password,
+        carId,
+        from,
+        to,
+      });
+
+      console.log(resp.data);
+
+      return new Requisite<CarOrder>().parse(resp.data);
+    }
+    catch (e) {
+      return new Requisite<CarOrder>().error(e);
     }
   }
 }

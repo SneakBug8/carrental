@@ -29,6 +29,18 @@ class StateClass
     return res;
   }
 
+  public async RentCar()
+  {
+    const state = store.getState();
+
+    const carid = state.rentCarId;
+
+    const cars = (await this.GetCars()).data;
+
+    const car = cars.find((x: Car) => x.id + "" === carid);
+    store.set("rentCar", car);
+  }
+
   public async GetCars()
   {
     const state = store.getState();

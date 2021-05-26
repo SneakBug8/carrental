@@ -48,13 +48,13 @@ export class Requisite<T = null> {
 
     public toJSON()
     {
-        return JSON.stringify({
+        return {
             error: {
                 code: this._code,
                 message: this.message,
             },
             data: this.data,
-        });
+        };
     }
 
     public fromJSON(json: string)

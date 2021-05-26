@@ -57,4 +57,12 @@ export class Requisite<T = null> {
         this.code = temp.code || this.code;
         return this;
     }
+
+    public parse(json: any)
+    {
+        this.message = json.error.message || this.message;
+        this.data = json.data || null;
+        this.code = json.code || this.code;
+        return this;
+    }
 }

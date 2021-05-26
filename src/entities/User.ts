@@ -32,9 +32,7 @@ export class User
         res.login = login;
         res.password = password;
 
-        await this.Insert(res);
-
-        return res;
+        return await this.Insert(res);
     }
 
     public static async GetById(id: number)

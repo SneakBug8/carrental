@@ -7,6 +7,8 @@ import { HomeModelCard } from "../partials/HomeModelCard";
 import { RouteComponentProps } from "react-router-dom";
 import { jquery } from "..";
 import { useStore } from "react-context-hook";
+import { Loader } from "../partials/Loader";
+import { ShowIf } from "../partials/ShowIf";
 
 interface IHomeState
 {
@@ -21,6 +23,9 @@ export const Home = (props: RouteComponentProps) =>
 {
   const [models, setModels] = useState<CarModel[]>([]);
   const [error, setError] = useState<Requisite>(new Requisite());
+
+  const [loaded, setLoaded] = useState<boolean>(false);
+
   const [searchModelId, setSearchModelId] = useStore("searchModelId", 0);
   const [searchFrom, setSearchFrom] = useStore("searchFrom", null);
   const [searchTo, setSearchTo] = useStore("searchTo", null);
@@ -30,6 +35,7 @@ export const Home = (props: RouteComponentProps) =>
     State.GetModels().then((response) =>
     {
       setModels(response.data || new Array<CarModel>());
+      setLoaded(true);
     })
       .catch((response) =>
       {
@@ -60,35 +66,35 @@ export const Home = (props: RouteComponentProps) =>
                 </div>
               </div>
               <form className="trip-form" onSubmit={handleSubmit}>
-
                 <div className="row align-items-center">
+                  <Loader show={!loaded} />
+                  <ShowIf show={loaded}>
+                    <div className="mb-3 mb-md-0 col-md-3">
 
-                  <div className="mb-3 mb-md-0 col-md-3">
-                    <select name="" id="cf-2" required className="custom-select form-control">
-                      {(models.map((e) =>
-                        <option value={e.id} key={e.id}>{e.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-3 mb-md-0 col-md-3">
-                    <div className="form-control-wrap">
-                      <input type="text" id="cf-3" required placeholder="Pick up" className="form-control datepicker px-3" />
-                      <span className="icon icon-date_range"></span>
+                      <select name="" id="cf-2" required className="custom-select form-control">
+                        {(models.map((e) =>
+                          <option value={e.id} key={e.id}>{e.name}</option>
+                        ))}
+                      </select>
                     </div>
-                  </div>
-                  <div className="mb-3 mb-md-0 col-md-3">
-                    <div className="form-control-wrap">
-                      <input type="text" id="cf-4" required placeholder="Drop off" className="form-control datepicker px-3" />
-                      <span className="icon icon-date_range"></span>
+                    <div className="mb-3 mb-md-0 col-md-3">
+                      <div className="form-control-wrap">
+                        <input type="text" id="cf-3" required placeholder="Pick up" className="form-control datepicker px-3" />
+                        <span className="icon icon-date_range"></span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="mb-3 mb-md-0 col-md-3">
-                    <input type="submit" value="Search Now" className="btn btn-primary btn-block py-3" />
-                  </div>
+                    <div className="mb-3 mb-md-0 col-md-3">
+                      <div className="form-control-wrap">
+                        <input type="text" id="cf-4" required placeholder="Drop off" className="form-control datepicker px-3" />
+                        <span className="icon icon-date_range"></span>
+                      </div>
+                    </div>
+                    <div className="mb-3 mb-md-0 col-md-3">
+                      <input type="submit" value="Search Now" className="btn btn-primary btn-block py-3" />
+                    </div>
+                  </ShowIf>
                 </div>
-
               </form>
-
             </div>
           </div>
         </div>
@@ -176,6 +182,7 @@ export const Home = (props: RouteComponentProps) =>
           </div>
 
           <div className="row">
+            <Loader show={!loaded} />
             {models.map(e => <HomeModelCard model={e} key={e.id} />)}
           </div>
         </div>

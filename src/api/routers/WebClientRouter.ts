@@ -65,7 +65,10 @@ export class WebClientRouter
         router.delete("/users/:id", this.onDeleteUser);
         router.all("/users", this.onUsers);
 
-        router.all("/register", this.onRegister);
+        router.post("/register", this.onRegister);
+        router.post("/auth", this.onAuth);
+        router.post("/login", this.onAuth);
+        router.post("/rent", this.onRent);
 
         router.all(new RegExp(".*"), this.on404);
 
@@ -97,11 +100,6 @@ export class WebClientRouter
         res.locals.backurl = req.client.getUrl();
         next();
     }*/
-
-    public static onRegister(req: IMyRequest, res: express.Response)
-    {
-        // WebClientUtil.render(req, res, "register", {}, false);
-    }
 
     public static on404(req: IMyRequest, res: express.Response)
     {
@@ -440,5 +438,73 @@ export class WebClientRouter
 
         user = (await User.GetById(user.id)).data;
         res.json(user);
+    }
+
+    public static async onRegister(req: IMyRequest, res: express.Response)
+    {
+        const data = req.body;
+
+        if (!data.login || !data.password || !data.phone || !data.email) {
+            return res.json(new Requisite().code(202).error("Wrong data sent.").toJSON());
+        }
+
+        const r = await User.Create(data.login, data.password);
+
+        const user = r.data;
+        user.email = data.email;
+        user.phoneNumber = data.phone;
+
+        const r2 = User.Update(user);
+
+        return res.json({ userId: r.data.id });
+    }
+
+    public static async onAuth(req: IMyRequest, res: express.Response)
+    {
+        const data = req.body;
+
+        if (!data.login || !data.password) {
+            return res.json(new Requisite().code(202).error("Wrong data sent.").toJSON());
+        }
+
+        const user = await User.GetByName(data.login);
+        if (!user.result || user.data.password !== data.password) {
+            return res.json(new Requisite().code(201).error("Wrong login or password.").toJSON());
+        }
+
+        return res.json({ userId: user.data.id });
+    }
+
+    public static async onRent(req: IMyRequest, res: express.Response)
+    {
+        const data = req.body;
+
+        if (!data.login || !data.password || !data.carId || !data.from || !data.to) {
+            return res.json(new Requisite().code(202).error("Wrong data sent.").toJSON());
+        }
+
+        const user = await User.GetByName(data.login);
+        if (!user.result || user.data.password !== data.password) {
+            return res.json(new Requisite().code(201).error("Wrong login or password.").toJSON());
+        }
+
+        const car = await Car.GetById(data.carId);
+
+        if (!car.result) {
+            return res.json(new Requisite().code(203).error("No such car.").toJSON());
+        }
+
+        const from = new Date(data.from);
+        const to = new Date(data.to);
+
+        const available = await CarOrder.GetOrdersForCarWithinTimeframe(car.data.id, from, to);
+
+        if (available.length) {
+            return res.json(new Requisite().code(204).error("Car is not available for rent.").toJSON());
+        }
+
+        const order = await CarOrder.Create(car.data.id, from, to, user.data.id);
+
+        return res.json(new Requisite(order));
     }
 }

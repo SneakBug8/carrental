@@ -3,7 +3,18 @@ import { Car } from "../entities/Car";
 import { useStore } from "react-context-hook";
 import { RouteComponentProps } from "react-router-dom";
 
-export const CarCard = ({ car }: { car: Car }) => (<div className="col-md-6 col-lg-4 mb-4" >
+export const RentCarCard = ({ car, history }: (RouteComponentProps & { car: Car, key: any })) =>
+{
+  const [rentCarId, setRentCarId] = useStore("rentCarId", 0);
+
+  function onClick(event: React.MouseEvent<HTMLAnchorElement>)
+  {
+    setRentCarId((event.target as HTMLElement).id);
+    history.push("/rent");
+    event.preventDefault();
+  }
+
+  return (< div className="col-md-6 col-lg-4 mb-4" >
     <div className="listing d-block  align-items-stretch">
       <div className="listing-img h-100 mr-4">
         <img src={(car.Model as any).photo} alt="Image" className="img-fluid" />
@@ -13,7 +24,9 @@ export const CarCard = ({ car }: { car: Car }) => (<div className="col-md-6 col-
         <div>
           <p>Местоположение: {car.Location ? car.Location.name : ""}</p>
           <p>{car.Model ? car.Model.description : ""}</p>
+          <p><a href="#" className="btn btn-primary btn-sm" id={car.id + ""} onClick={onClick}>Rent Now</a></p>
         </div>
       </div>
     </div>
   </div >);
+};

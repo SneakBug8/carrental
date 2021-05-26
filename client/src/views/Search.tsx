@@ -1,37 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { Car } from "../entities/Car";
-import { CarPartial } from "../partials/Car";
 import { State } from "../State";
 import { Requisite } from "../Requisite";
 import { ErrorMessage } from "../partials/ErrorMessage";
-import { CarCard } from "../partials/CarCard";
 import { RouteComponentProps } from "react-router-dom";
 import { useStore } from "react-context-hook";
+import { Loader } from "../partials/Loader";
+import { RentCarCard } from "../partials/RentCarCard";
 
 export const SearchView = (props: RouteComponentProps) =>
 {
   const [cars, setCars] = useState<Car[]>([]);
   const [error, setError] = useState<Requisite>(new Requisite());
 
+  const [loaded, setLoaded] = useState<boolean>(false);
+
   const [searchModelId, setSearchModelId] = useStore("searchModelId", 0);
   const [searchModel, setSearchModel] = useStore("searchModel", null);
   const [searchFromString, setSearchFromString] = useStore("searchFromString", null);
   const [searchToString, setSearchToString] = useStore("searchToString", null);
 
+  if (!searchModelId) {
+    props.history.push("../");
+  }
+
   useEffect(() =>
   {
-    if (!searchModelId) {
-      props.history.push("../");
-    }
     console.log(props.location.search);
 
     State.SearchCars().then((response) =>
     {
       setCars(response.data || new Array<Car>());
+      setLoaded(true);
     })
       .catch((response) =>
       {
         setError(response);
+        setLoaded(true);
       });
   }, []);
 
@@ -58,8 +63,9 @@ export const SearchView = (props: RouteComponentProps) =>
               <ErrorMessage requisite={error} />
             </div>
           </div>
+          <Loader show={!loaded}/>
           <div className="row">
-            {cars.map(e => <CarCard car={e} key={e.id} />)}
+            {cars.map(e => <RentCarCard car={e} key={e.id} {...props} />)}
           </div>
         </div>
       </div>
