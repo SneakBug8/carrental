@@ -3,7 +3,6 @@ import { API } from "./API";
 import { Requisite } from "./Requisite";
 import { CarModel } from "./entities/CarModel";
 import { Location } from "./entities/Location";
-import { jquery } from ".";
 import { store } from 'react-context-hook';
 
 class StateClass

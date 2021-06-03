@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import $ from "jquery";
 import { State } from "../State";
 import { CarModel } from "../entities/CarModel";
 import { Requisite } from "../Requisite";
 import { Car } from "../entities/Car";
 import { HomeModelCard } from "../partials/HomeModelCard";
 import { RouteComponentProps } from "react-router-dom";
-import { jquery } from "..";
 import { useStore } from "react-context-hook";
 import { Loader } from "../partials/Loader";
 import { ShowIf } from "../partials/ShowIf";
+import { setupDatepickers } from "../utilities/setupDatepickers";
 
 interface IHomeState
 {
@@ -47,12 +48,14 @@ export const Home = (props: RouteComponentProps) =>
   {
     event.preventDefault();
 
-    setSearchModelId(Number.parseInt(jquery("#cf-2").val(), 10));
-    setSearchFrom(jquery("#cf-3").datepicker("getDate"));
-    setSearchTo(jquery("#cf-4").datepicker("getDate"));
+    setSearchModelId(Number.parseInt($("#cf-2").val() + "" || "", 10));
+    setSearchFrom(($("#cf-3") as any).datepicker("getDate"));
+    setSearchTo(($("#cf-4") as any).datepicker("getDate"));
 
     props.history.push(`/search`);
   }
+
+  useEffect(setupDatepickers);
 
   return (
     <div>
@@ -70,10 +73,9 @@ export const Home = (props: RouteComponentProps) =>
                   <Loader show={!loaded} />
                   <ShowIf show={loaded}>
                     <div className="mb-3 mb-md-0 col-md-3">
-
                       <select name="" id="cf-2" required className="custom-select form-control">
                         {(models.map((e) =>
-                          <option value={e.id} key={e.id}>{e.name}</option>
+                          <option value={e.id} key={e.id}>{e.name}</option>,
                         ))}
                       </select>
                     </div>
@@ -99,8 +101,6 @@ export const Home = (props: RouteComponentProps) =>
           </div>
         </div>
       </div>
-
-
 
       <div className="site-section">
         <div className="container">
@@ -169,8 +169,6 @@ export const Home = (props: RouteComponentProps) =>
           </div>
         </div>
       </div>
-
-
 
       <div className="site-section bg-light">
         <div className="container">
@@ -332,4 +330,4 @@ export const Home = (props: RouteComponentProps) =>
       </div>
     </div>
   );
-}
+};

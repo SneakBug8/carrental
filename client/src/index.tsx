@@ -15,4 +15,4 @@ ReactDOM.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-export const jquery = (window as any).$;
+export let jquery = (window as any).$;

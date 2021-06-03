@@ -8,9 +8,10 @@ import { CarCard } from "../partials/CarCard";
 import { RouteComponentProps } from "react-router-dom";
 import { useStore } from "react-context-hook";
 import { Loader } from "../partials/Loader";
-import { jquery } from "..";
+import $ from "jquery";
 import { ShowIf } from "../partials/ShowIf";
 import { API } from "../API";
+import { normalizeToString } from "../utilities/normalize";
 
 export const RentView = (props: RouteComponentProps) =>
 {
@@ -58,10 +59,10 @@ export const RentView = (props: RouteComponentProps) =>
   {
     event.preventDefault();
 
-    const login = jquery("#cf-2").val();
-    const password = jquery("#cf-3").val();
-    const phone = jquery("#cf-4").val();
-    const email = jquery("#cf-5").val();
+    const login = normalizeToString($("#cf-2").val());
+    const password = normalizeToString( $("#cf-3").val() );
+    const phone = normalizeToString( $("#cf-4").val() );
+    const email = normalizeToString( $("#cf-5").val() );
 
     if (register === 2) {
       const r = await API.Register(login, password, phone, email);

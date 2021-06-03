@@ -8,7 +8,6 @@ import { CarCard } from "../partials/CarCard";
 import { RouteComponentProps } from "react-router-dom";
 import { useStore } from "react-context-hook";
 import { Loader } from "../partials/Loader";
-import { jquery } from "..";
 import { ShowIf } from "../partials/ShowIf";
 import { API } from "../API";
 
