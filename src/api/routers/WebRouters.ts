@@ -3,12 +3,14 @@ import * as express from "express";
 import { IMyRequest, WebClientUtil } from "../WebClientUtil";
 import { WebClientRouter } from "./WebClientRouter";
 import * as path from "path";
+import { WebPrintRouter } from "./WebPrintRouter";
 
 export class WebRouters
 {
     public static Init(app: express.Express)
     {
         app.use("/api", WebClientRouter.GetRouter());
+        app.use("/print", WebPrintRouter.GetRouter());
 
         app.use((req, res) =>
         {

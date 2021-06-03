@@ -2,7 +2,6 @@ import * as express from "express";
 import { body, param, query, validationResult } from "express-validator";
 import * as bodyParser from "body-parser";
 import { Config } from "config";
-import { FactoryManagementService } from "services/example";
 import { IMyRequest, WebClientUtil } from "../WebClientUtil";
 import { Car } from "entities/Car";
 import { CarModel } from "entities/CarModel";

@@ -1,0 +1,31 @@
+<h1>Заказ</h1>
+<table class="table">
+    <thead>
+    <th>Товар</th>
+    <th>Цены последнего дня</th>
+    <th>Объем последнего дня</th>
+    </thead>
+{{#each data}}
+    <tr>
+<td><a class="btn btn-primary" href="/market/{{this.id}}">{{this.name}}</a></td>
+<td>{{this.prices}}</td>
+<td>{{this.amount}}</td>
+    </tr>
+{{/each}}
+
+</table>
+
+<div>
+<h2>Отправка денег другому игроку</h2>
+<form action="/money/send" method="POST" enctype="application/x-www-form-urlencoded">
+    <div class="form-group clearfix">
+        <label for="username">Username</label>
+        <input name="username" required type="text" class="form-control" id="username" placeholder="..." required>
+    </div>
+    <div class="form-group clearfix">
+        <label for="amount">Сумма</label>
+        <input name="amount" required type="text" class="form-control" id="amount" placeholder="0" required>
+    </div>
+    <button type="submit" class="btn btn-positive">Отправить</button>
+</form>
+</div>
