@@ -12,7 +12,8 @@ export const UsersList = (props: any) => (
     <List {...props}>
         <Datagrid>
           <TextField source="id" />
-          <TextField source="login" />
+            <TextField source="login" />
+          <TextField source="name" />
           <TextField source="role" />
           <TextField source="phoneNumber" />
           <TextField source="email" />
@@ -30,7 +31,8 @@ export const UsersEdit = (props: any) => (
         <SimpleForm>
           <TextInput disabled source="id" />
           <TextInput source="login" />
-          <PasswordInput source="password" />
+            <PasswordInput source="password" />
+          <TextInput source="name" />
           <TextInput source="role" />
           <TextInput source="phoneNumber" />
           <TextInput source="email" />
@@ -42,7 +44,8 @@ export const UsersCreate = (props: any) => (
     <Create title="Create an order" {...props}>
     <SimpleForm>
           <TextInput source="login" />
-          <PasswordInput source="password" />
+            <PasswordInput source="password" />
+          <TextInput source="name" />
           <TextInput source="role" />
           <TextInput source="phoneNumber" />
           <TextInput source="email" />

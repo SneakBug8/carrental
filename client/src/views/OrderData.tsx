@@ -32,6 +32,7 @@ export const OrderData = (props: RouteComponentProps) =>
 
   if (!carOrder) {
     props.history.push("../");
+    return null;
   }
 
   return (
@@ -57,6 +58,7 @@ export const OrderData = (props: RouteComponentProps) =>
                 <p className="mb-5">Заказываем авто {rentCar ? rentCar.id : ""} модели {searchModel ? `${searchModel.name} ` : ""}
                   на срок от {searchFromString} по {searchToString}.</p>
                 <p className="mb-5">Заказ подтверждён с номером {carOrder.id}.</p>
+                <a className="btn btn-secondary" href={"/print/order/" + carOrder.id}>Печать</a>
               </div>
             </div>
           </div>

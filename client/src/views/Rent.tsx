@@ -16,6 +16,8 @@ import { normalizeToString } from "../utilities/normalize";
 export const RentView = (props: RouteComponentProps) =>
 {
   const [error, setError] = useState<Requisite<any>>(new Requisite());
+  const [loginError, setLoginError] = useState<Requisite<any>>(new Requisite());
+
   const [loaded, setLoaded] = useState<boolean>(false);
 
   const [register, setRegister] = useState<number>(1);
@@ -60,21 +62,26 @@ export const RentView = (props: RouteComponentProps) =>
     event.preventDefault();
 
     const login = normalizeToString($("#cf-2").val());
-    const password = normalizeToString( $("#cf-3").val() );
-    const phone = normalizeToString( $("#cf-4").val() );
-    const email = normalizeToString( $("#cf-5").val() );
+    const password = normalizeToString($("#cf-3").val());
+    const name = normalizeToString($("#cf-6").val());
+    const phone = normalizeToString($("#cf-4").val());
+    const email = normalizeToString($("#cf-5").val());
 
-    if (register === 2) {
-      const r = await API.Register(login, password, phone, email);
+    if (register == 2) {
+      const r = await API.Register(login, password, name, phone, email);
+
+      console.log(r);
+
+      if (!r.result) {
+        setLoginError(r);
+        return;
+      }
     }
 
     const r2 = await API.Rent(login, password, rentCarId, searchFrom, searchTo);
 
-    console.log(r2);
-
     if (!r2.result) {
-      console.log(r2);
-      setError(r2);
+      setLoginError(r2);
       return;
     }
 
@@ -108,19 +115,21 @@ export const RentView = (props: RouteComponentProps) =>
                   на срок от {searchFromString} по {searchToString}.</p>
               </div>
             </div>
+            <ErrorMessage requisite={loginError} />
             <form className="trip-form" onSubmit={handleSubmit}>
               <div className="row align-items-center">
                 <div className="mb-3 mb-md-0 col-md-12">
                   <div className="form-control-wrap">
-                    <select id="cf-1" name="title" className="form-control px-3" value={register} onChange={registerChange}>
-                      <option value="1">Уже зарегистрирован</option>
-                      <option value="2">Зарегистрироваться</option>
+                    <select id="cf-1" name="title" className="form-control px-3 mb-3" value={register} onChange={registerChange}>
+                      <option value="1">Already registered</option>
+                      <option value="2">Register</option>
                     </select>
-                    <input type="text" id="cf-2" required placeholder="Login" className="form-control px-3" />
-                    <input type="text" id="cf-3" required placeholder="Password" className="form-control px-3" />
+                    <input type="text" id="cf-2" required placeholder="Login" className="form-control px-3 mb-3" />
+                    <input type="password" id="cf-3" required placeholder="Password" className="form-control px-3 mb-3" />
                     <ShowIf show={register == 2}>
-                      <input type="text" id="cf-4" required placeholder="Phone" className="form-control px-3" />
-                      <input type="text" id="cf-5" required placeholder="Email" className="form-control px-3" />
+                      <input type="text" id="cf-6" required placeholder="Name" className="form-control px-3 mb-3" />
+                      <input type="text" id="cf-4" required placeholder="Phone" className="form-control px-3 mb-3" />
+                      <input type="text" id="cf-5" required placeholder="Email" className="form-control px-3 mb-3" />
                     </ShowIf>
                     <input type="submit" value="Book Now" className="btn btn-primary btn-block py-3" />
                   </div>

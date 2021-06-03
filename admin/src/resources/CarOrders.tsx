@@ -12,6 +12,9 @@ export const CarOrdersList = (props: any) => (
     <List {...props}>
         <Datagrid>
             <TextField source="id" />
+            <ReferenceField label="Customer" source="customerId" reference="users">
+                <TextField source="login" />
+            </ReferenceField>
             <ReferenceField label="Car" source="carId" reference="cars">
                 <TextField source="id" />
             </ReferenceField>

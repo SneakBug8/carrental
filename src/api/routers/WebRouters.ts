@@ -14,13 +14,11 @@ export class WebRouters
 
         app.use((req, res) =>
         {
-            console.log("Serving React App");
+            // console.log("Serving React App");
             res.sendFile(path.resolve(Config.projectPath() + "/client/build/index.html"));
         });
 
         app.use(this.on404);
-
-        // app.use("/api", WebAPIRouter.GetRouter());
     }
 
     public static on404(req: IMyRequest, res: express.Response)

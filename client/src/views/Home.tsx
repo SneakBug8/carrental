@@ -10,6 +10,8 @@ import { useStore } from "react-context-hook";
 import { Loader } from "../partials/Loader";
 import { ShowIf } from "../partials/ShowIf";
 import { setupDatepickers } from "../utilities/setupDatepickers";
+import { ErrorMessage } from "../partials/ErrorMessage";
+import { jquery } from "..";
 
 interface IHomeState
 {
@@ -48,9 +50,28 @@ export const Home = (props: RouteComponentProps) =>
   {
     event.preventDefault();
 
-    setSearchModelId(Number.parseInt($("#cf-2").val() + "" || "", 10));
-    setSearchFrom(($("#cf-3") as any).datepicker("getDate"));
-    setSearchTo(($("#cf-4") as any).datepicker("getDate"));
+    const from = jquery("#cf-3").datepicker("getDate");
+    const to = jquery("#cf-4").datepicker("getDate");
+
+    console.log(from);
+    console.log(to);
+
+    if (from.getTime() < Date.now()) {
+      setError(new Requisite().error("Выберите дату начала больше текущей."));
+      return;
+    }
+    if (to.getTime() < Date.now()) {
+      setError(new Requisite().error("Выберите дату окончания больше текущей."));
+      return;
+    }
+    if (from.getTime() > to.getTime()) {
+      setError(new Requisite().error("Выберите дату начала меньше даты окончания."));
+      return;
+    }
+
+    setSearchModelId(Number.parseInt(jquery("#cf-2").val() + "" || "", 10));
+    setSearchFrom(from);
+    setSearchTo(to);
 
     props.history.push(`/search`);
   }
@@ -71,6 +92,7 @@ export const Home = (props: RouteComponentProps) =>
               <form className="trip-form" onSubmit={handleSubmit}>
                 <div className="row align-items-center">
                   <Loader show={!loaded} />
+                  <ErrorMessage requisite={error} />
                   <ShowIf show={loaded}>
                     <div className="mb-3 mb-md-0 col-md-3">
                       <select name="" id="cf-2" required className="custom-select form-control">
@@ -81,13 +103,13 @@ export const Home = (props: RouteComponentProps) =>
                     </div>
                     <div className="mb-3 mb-md-0 col-md-3">
                       <div className="form-control-wrap">
-                        <input type="text" id="cf-3" required placeholder="Pick up" className="form-control datepicker px-3" />
+                        <input type="text" id="cf-3" autoComplete="off" required placeholder="Pick up" className="form-control datepicker px-3" />
                         <span className="icon icon-date_range"></span>
                       </div>
                     </div>
                     <div className="mb-3 mb-md-0 col-md-3">
                       <div className="form-control-wrap">
-                        <input type="text" id="cf-4" required placeholder="Drop off" className="form-control datepicker px-3" />
+                        <input type="text" id="cf-4" autoComplete="off" required placeholder="Drop off" className="form-control datepicker px-3" />
                         <span className="icon icon-date_range"></span>
                       </div>
                     </div>

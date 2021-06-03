@@ -7,6 +7,11 @@ html {
   color: #b8b8b8;
 }
 
+.alert {
+  display: block;
+  width: 100%;
+}
+
 .primary-primary-outline--hover {
   background: #0779e4;
   color: #fff;

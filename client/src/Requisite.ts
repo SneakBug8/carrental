@@ -1,7 +1,5 @@
-import { Result } from "express-validator";
-
 export class Requisite<T = null> {
-    public code: number = 1;
+    public _code: number = 1;
     public data: T | undefined = undefined;
     public result: boolean = false;
     public message: string = "";
@@ -19,7 +17,10 @@ export class Requisite<T = null> {
 
     public success(data?: T | string)
     {
-        if (typeof data === "string") {
+        if (typeof data === "boolean") {
+            this.message = "Success";
+        }
+        else if (typeof data === "string") {
             this.message = data;
         }
         else {
@@ -38,31 +39,35 @@ export class Requisite<T = null> {
         return `Requisite(${this.result}): ${this.message}`;
     }
 
-    public toJSON(code: number)
+    public code(code: number) {
+        this._code = code;
+        return this;
+    }
+
+    public toJSON()
     {
         return JSON.stringify({
             error: {
-                code,
+                code: this._code,
                 message: this.message,
             },
             data: this.data,
+            result: this.result,
         });
     }
 
     public fromJSON(json: string)
     {
         const temp = JSON.parse(json);
-        this.message = temp.error.message || this.message;
-        this.data = temp.data || null;
-        this.code = temp.code || this.code;
-        return this;
+        return this.parse(temp);
     }
 
-    public parse(json: any)
+    public parse(temp: any)
     {
-        this.message = json.error.message || this.message;
-        this.data = json.data || null;
-        this.code = json.code || this.code;
+        this.message = temp.error && temp.error.message || this.message;
+        this.data = temp.data || null;
+        this._code = temp.error && temp.error.code;
+        this.result = (temp.result !== undefined) ? temp.result : true;
         return this;
     }
 }

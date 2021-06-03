@@ -9,6 +9,7 @@ export class User
     public id: number;
     public login: string;
     public password: string;
+    public name: string;
     public role: number = 1;
     public phoneNumber: string;
     public email: string;
@@ -19,6 +20,7 @@ export class User
         res.id = dbobject.Id;
         res.login = dbobject.Login;
         res.password = dbobject.Password;
+        res.name = dbobject.Name;
         res.role = dbobject.Role;
         res.phoneNumber = dbobject.PhoneNumber;
         res.email = dbobject.Email;
@@ -84,6 +86,7 @@ export class User
                 Role: user.role,
                 PhoneNumber: user.phoneNumber,
                 Email: user.email,
+                Name: user.name,
             });
             return new Requisite(true);
         }
@@ -101,6 +104,7 @@ export class User
                 Role: user.role,
                 PhoneNumber: user.phoneNumber,
                 Email: user.email,
+                Name: user.name,
             }).returning("Id");
 
             user.id = d[0];

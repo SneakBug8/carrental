@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Requisite } from "../Requisite";
 
 export const ErrorMessage = ({ requisite }: { requisite: Requisite }) =>
@@ -9,7 +9,7 @@ export const ErrorMessage = ({ requisite }: { requisite: Requisite }) =>
 
   return (
     <div className="alert alert-danger">
-      {requisite.code} {requisite.message}
+      {requisite._code} {requisite.message}
     </div>
   );
 }

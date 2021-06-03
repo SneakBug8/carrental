@@ -137,7 +137,14 @@ export class WebClientRouter
     {
         const date = JSON.parse(req.query.date as string);
         const modelId = Number.parseInt(req.query.modelId as string, 10);
-        const cars = await CarService.GetAvailableCars(modelId, new Date(date[0]), new Date(date[1]));
+
+        const from = new Date(date[0]);
+        const to = new Date(date[1]);
+
+        if (from > to || Date.now() > from.getTime() || Date.now() > to.getTime()) {
+            res.json([]); return;
+        }
+        const cars = await CarService.GetAvailableCars(modelId, from, to);
         res.json(cars);
     }
 
@@ -449,9 +456,14 @@ export class WebClientRouter
 
         const r = await User.Create(data.login, data.password);
 
+        if (!r.result) {
+            res.json(new Requisite().code(401).error("Such user already registered").toJSON()); return;
+        }
+
         const user = r.data;
         user.email = data.email;
         user.phoneNumber = data.phone;
+        user.name = data.name;
 
         const r2 = User.Update(user);
 

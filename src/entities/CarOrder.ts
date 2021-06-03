@@ -20,7 +20,7 @@ export class CarOrder
         res.carId = dbobject.CarId;
         res.from = new Date(dbobject.From);
         res.to = new Date(dbobject.To);
-        res.customerId = dbobject.Customer;
+        res.customerId = dbobject.CustomerId;
 
         return res;
     }

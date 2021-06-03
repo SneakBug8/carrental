@@ -26,8 +26,6 @@ export const SearchView = (props: RouteComponentProps) =>
 
   useEffect(() =>
   {
-    console.log(props.location.search);
-
     State.SearchCars().then((response) =>
     {
       setCars(response.data || new Array<Car>());

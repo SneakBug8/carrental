@@ -67,17 +67,20 @@ export class API
     }
   }
 
-  public static async Register(login: string, password: string, phone: string, email: string)
+  public static async Register(login: string, password: string, name: string, phone: string, email: string)
   {
     try {
       const resp = await axios.post(`/api/register`, {
         login,
         password,
+        name,
         phone,
         email,
       });
 
-      return new Requisite(resp.data) as Requisite<{userId: number}>;
+      console.log(resp);
+
+      return new Requisite<{userId: number}>().fromJSON(resp.data);
     }
     catch (e) {
       return new Requisite().error(e);
@@ -92,7 +95,7 @@ export class API
         password,
       });
 
-      return new Requisite(resp.data) as Requisite<{userId: number}>;
+      return new Requisite<{userId: number}>().fromJSON(resp.data);
     }
     catch (e) {
       return new Requisite().error(e);
@@ -110,9 +113,7 @@ export class API
         to,
       });
 
-      console.log(resp.data);
-
-      return new Requisite<CarOrder>().parse(resp.data);
+      return new Requisite<CarOrder>().fromJSON(resp.data);
     }
     catch (e) {
       return new Requisite<CarOrder>().error(e);

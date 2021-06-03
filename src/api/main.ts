@@ -30,7 +30,7 @@ app.listen(port, () =>
 
 app.use((req, res, next) =>
 {
-    if (!req.url.startsWith("/api")) {
+    if (!req.url.startsWith("/api") && !req.url.startsWith("/print")) {
         return;
     }
 
