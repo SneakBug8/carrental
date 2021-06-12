@@ -86,7 +86,7 @@ export const Home = (props: RouteComponentProps) =>
             <div className="col-lg-10">
               <div className="row mb-5">
                 <div className="col-lg-7 intro">
-                  <h1><strong>Rent a car</strong> is within your finger tips.</h1>
+                  <h1><strong>Rent a car in Italy</strong> with 0 effort.</h1>
                 </div>
               </div>
               <form className="trip-form" onSubmit={handleSubmit}>
@@ -136,7 +136,7 @@ export const Home = (props: RouteComponentProps) =>
                 <div className="step-inner">
                   <span className="number text-primary">01.</span>
                   <h3>Select a car</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, laboriosam!</p>
+                  <p>Take a look at our models we offer to you.</p>
                 </div>
               </div>
             </div>
@@ -146,7 +146,7 @@ export const Home = (props: RouteComponentProps) =>
                 <div className="step-inner">
                   <span className="number text-primary">02.</span>
                   <h3>Fill up form</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, laboriosam!</p>
+                  <p>Select model and planned dates of rental. Don't worry, you can always change them with our managers.</p>
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@ export const Home = (props: RouteComponentProps) =>
                 <div className="step-inner">
                   <span className="number text-primary">03.</span>
                   <h3>Payment</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, laboriosam!</p>
+                  <p>Pay 50% when taking a car and 50% when returning it.</p>
                 </div>
               </div>
             </div>
@@ -184,9 +184,8 @@ export const Home = (props: RouteComponentProps) =>
             </div>
             <div className="col-lg-4 ml-auto order-lg-1">
               <h3 className="mb-4 section-heading"><strong>You can easily avail our promo for renting a car.</strong></h3>
-              <p className="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae, explicabo iste a labore id est quas, doloremque veritatis! Provident odit pariatur dolorem quisquam, voluptatibus voluptates optio accusamus, vel quasi quidem!</p>
-
-              <p><a href="#" className="btn btn-primary">Meet them now</a></p>
+              <p className="mb-5">Rent car before 1st of July and get a 10% discount!</p>
+              <p><a href="#" className="btn btn-primary">Rent now</a></p>
             </div>
           </div>
         </div>
@@ -197,7 +196,7 @@ export const Home = (props: RouteComponentProps) =>
           <div className="row">
             <div className="col-lg-7">
               <h2 className="section-heading"><strong>Car Listings</strong></h2>
-              <p className="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              <p className="mb-5">Car models you can rent in our company.</p>
             </div>
           </div>
 
@@ -213,7 +212,7 @@ export const Home = (props: RouteComponentProps) =>
           <div className="row">
             <div className="col-lg-7">
               <h2 className="section-heading"><strong>Features</strong></h2>
-              <p className="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              <p className="mb-5">What makes us different from other companies around.</p>
             </div>
           </div>
 
@@ -224,8 +223,8 @@ export const Home = (props: RouteComponentProps) =>
                   <span className="icon-home"></span>
                 </span>
                 <div className="service-1-contents">
-                  <h3>Lorem ipsum dolor</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, laboriosam.</p>
+                  <h3>Rent nearby</h3>
+                  <p>90% of Italy has our office within 5km!</p>
                   <p className="mb-0"><a href="#">Learn more</a></p>
                 </div>
               </div>
@@ -236,8 +235,8 @@ export const Home = (props: RouteComponentProps) =>
                   <span className="icon-gear"></span>
                 </span>
                 <div className="service-1-contents">
-                  <h3>Lorem ipsum dolor</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, laboriosam.</p>
+                  <h3>Service</h3>
+                  <p>If something goes wrong with your car - just call us. Our serviceman will be at your location within half-an-hour.</p>
                   <p className="mb-0"><a href="#">Learn more</a></p>
                 </div>
               </div>
@@ -248,8 +247,8 @@ export const Home = (props: RouteComponentProps) =>
                   <span className="icon-watch_later"></span>
                 </span>
                 <div className="service-1-contents">
-                  <h3>Lorem ipsum dolor</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, laboriosam.</p>
+                  <h3>Saving your time</h3>
+                  <p>Renting a car at our office takes no longer than 15 minutes of your time. We make sure you don't waste your vacation on bureucracy.</p>
                   <p className="mb-0"><a href="#">Learn more</a></p>
                 </div>
               </div>
@@ -261,8 +260,8 @@ export const Home = (props: RouteComponentProps) =>
                   <span className="icon-verified_user"></span>
                 </span>
                 <div className="service-1-contents">
-                  <h3>Lorem ipsum dolor</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, laboriosam.</p>
+                  <h3>No risks</h3>
+                  <p>Our insurance program makes sure you will never be in debt no matter what happens.</p>
                   <p className="mb-0"><a href="#">Learn more</a></p>
                 </div>
               </div>
@@ -273,8 +272,8 @@ export const Home = (props: RouteComponentProps) =>
                   <span className="icon-video_library"></span>
                 </span>
                 <div className="service-1-contents">
-                  <h3>Lorem ipsum dolor</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, laboriosam.</p>
+                  <h3>Still unsure?</h3>
+                  <p>Watch video reviews from our customers.</p>
                   <p className="mb-0"><a href="#">Learn more</a></p>
                 </div>
               </div>
@@ -285,8 +284,8 @@ export const Home = (props: RouteComponentProps) =>
                   <span className="icon-vpn_key"></span>
                 </span>
                 <div className="service-1-contents">
-                  <h3>Lorem ipsum dolor</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, laboriosam.</p>
+                  <h3>E-key</h3>
+                  <p>Want to swap a car in a middle of a journey? Just get to our office and do it!</p>
                   <p className="mb-0"><a href="#">Learn more</a></p>
                 </div>
               </div>
@@ -301,20 +300,20 @@ export const Home = (props: RouteComponentProps) =>
           <div className="row">
             <div className="col-lg-7">
               <h2 className="section-heading"><strong>Testimonials</strong></h2>
-              <p className="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              <p className="mb-5">Faces of our happy clients.</p>
             </div>
           </div>
           <div className="row">
             <div className="col-lg-4 mb-4 mb-lg-0">
               <div className="testimonial-2">
                 <blockquote className="mb-4">
-                  <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, deserunt eveniet veniam. Ipsam, nam, voluptatum"</p>
+                  <p>"My wife and I had awesome vacation in South Italy thanks to our rented car at Carrental. We had no problems whatsoever."</p>
                 </blockquote>
                 <div className="d-flex v-card align-items-center">
                   <img src="images/person_1.jpg" alt="Image" className="img-fluid mr-3" />
                   <div className="author-name">
                     <span className="d-block">Mike Fisher</span>
-                    <span>Owner, Ford</span>
+                    <span>Tourist</span>
                   </div>
                 </div>
               </div>
@@ -322,7 +321,7 @@ export const Home = (props: RouteComponentProps) =>
             <div className="col-lg-4 mb-4 mb-lg-0">
               <div className="testimonial-2">
                 <blockquote className="mb-4">
-                  <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, deserunt eveniet veniam. Ipsam, nam, voluptatum"</p>
+                  <p>"My husband and I wanted to have a journey across Europe starting and ending in Italy because of flight back to the US. Carrental was our saviour as they allowed us to leave country in their car!"</p>
                 </blockquote>
                 <div className="d-flex v-card align-items-center">
                   <img src="images/person_2.jpg" alt="Image" className="img-fluid mr-3" />
@@ -336,7 +335,7 @@ export const Home = (props: RouteComponentProps) =>
             <div className="col-lg-4 mb-4 mb-lg-0">
               <div className="testimonial-2">
                 <blockquote className="mb-4">
-                  <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, deserunt eveniet veniam. Ipsam, nam, voluptatum"</p>
+                  <p>"I often travel across country in business trips and I don't like traveling long distances in a car. That's why I am a regular customer to Carrental."</p>
                 </blockquote>
                 <div className="d-flex v-card align-items-center">
                   <img src="images/person_3.jpg" alt="Image" className="img-fluid mr-3" />
