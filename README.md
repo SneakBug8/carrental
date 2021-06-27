@@ -2,6 +2,8 @@ Project landing page: http://k-2021-2.std-1482.ist.mospolytech.ru/
 
 ## How to run
 
+Connection to PostgreSQL database is configured in src/DataBase.ts.
+
 ### Dev
 
 1. Run `npm run-script watch` in one console.
