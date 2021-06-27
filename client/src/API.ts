@@ -67,6 +67,18 @@ export class API
     }
   }
 
+  public static async SearchCarsNew(modelId: number, from: string, to: string)
+  {
+    try {
+      const resp = await axios.get(`/api/cars/search2?locationId=${modelId}&date=["${from}", "${to}"]`);
+
+      return new Requisite<Car[]>(resp.data);
+    }
+    catch (e) {
+      return new Requisite<Car[]>().error(e);
+    }
+  }
+
   public static async Register(login: string, password: string, name: string, phone: string, email: string)
   {
     try {

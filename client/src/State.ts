@@ -3,7 +3,7 @@ import { API } from "./API";
 import { Requisite } from "./Requisite";
 import { CarModel } from "./entities/CarModel";
 import { Location } from "./entities/Location";
-import { store } from 'react-context-hook';
+import { store } from "react-context-hook";
 
 class StateClass
 {
@@ -16,10 +16,13 @@ class StateClass
 
     state = store.getState();
 
-    const res = await API.SearchCars(state.searchModelId, state.searchFromString, state.searchToString);
+    const res = await API.SearchCarsNew(state.searchLocationId, state.searchFromString, state.searchToString);
 
-    const models = (await this.GetModels()).data;
-    store.set("searchModel", models.find((x: CarModel) => x.id === state.searchModelId));
+    const locations = (await this.GetLocations()).data;
+    store.set("searchLocation", locations.find((x: Location) => x.id === state.searchLocationId));
+
+    // const models = (await this.GetModels()).data;
+    // store.set("searchModel", models.find((x: CarModel) => x.id === state.searchModelId));
 
     if (!res.result) {
       return res;

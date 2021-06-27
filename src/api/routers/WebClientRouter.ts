@@ -26,6 +26,7 @@ export class WebClientRouter
 
         // Cars
         router.get("/cars/search", this.onCarsSearch);
+        router.get("/cars/search2", this.onCarsSearchNew);
 
         router.all("/cars/populate", this.onCarsPopulated);
         router.get("/cars/:id", this.onCarGet);
@@ -145,6 +146,21 @@ export class WebClientRouter
             res.json([]); return;
         }
         const cars = await CarService.GetAvailableCars(modelId, from, to);
+        res.json(cars);
+    }
+
+    public static async onCarsSearchNew(req: IMyRequest, res: express.Response)
+    {
+        const date = JSON.parse(req.query.date as string);
+        const locationId = Number.parseInt(req.query.locationId as string, 10);
+
+        const from = new Date(date[0]);
+        const to = new Date(date[1]);
+
+        if (from > to || Date.now() > from.getTime() || Date.now() > to.getTime()) {
+            res.json([]); return;
+        }
+        const cars = await CarService.GetLocationCars(locationId, from, to);
         res.json(cars);
     }
 

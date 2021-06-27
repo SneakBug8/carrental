@@ -26,6 +26,7 @@ export const OrderData = (props: RouteComponentProps) =>
   const [searchModel, setSearchModel] = useStore("searchModel", null);
   const [searchFromString, setSearchFromString] = useStore("searchFromString", null);
   const [searchToString, setSearchToString] = useStore("searchToString", null);
+  const [searchLocation, setSearchLocation] = useStore("searchLocation");
 
   const [searchFrom, setSearchFrom] = useStore("searchFrom", null);
   const [searchTo, setSearchTo] = useStore("searchTo", null);
@@ -55,10 +56,10 @@ export const OrderData = (props: RouteComponentProps) =>
             <div className="row">
               <div className="col-lg-7">
                 <h2 className="section-heading"><strong>Car rent</strong></h2>
-                <p className="mb-5">Заказываем авто {rentCar ? rentCar.id : ""} модели {searchModel ? `${searchModel.name} ` : ""}
-                  на срок от {searchFromString} по {searchToString}.</p>
-                <p className="mb-5">Заказ подтверждён с номером {carOrder.id}.</p>
-                <a className="btn btn-secondary" href={"/print/order/" + carOrder.id}>Печать</a>
+                <p className="mb-5">You have booked car #{rentCar ? rentCar.id : ""} model {searchModel ? `${searchModel.name} ` : ""}
+                  from {searchFromString} to {searchToString} in {searchLocation && searchLocation.name}.</p>
+                <p className="mb-5">Your booking is confirmed with order number {carOrder.id}.</p>
+                <a className="btn btn-secondary" href={"/print/order/" + carOrder.id}>Page for print</a>
               </div>
             </div>
           </div>

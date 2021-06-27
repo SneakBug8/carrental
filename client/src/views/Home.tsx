@@ -3,7 +3,7 @@ import $ from "jquery";
 import { State } from "../State";
 import { CarModel } from "../entities/CarModel";
 import { Requisite } from "../Requisite";
-import { Car } from "../entities/Car";
+import { Location } from "../entities/Location";
 import { HomeModelCard } from "../partials/HomeModelCard";
 import { RouteComponentProps } from "react-router-dom";
 import { useStore } from "react-context-hook";
@@ -25,11 +25,13 @@ interface IHomeState
 export const Home = (props: RouteComponentProps) =>
 {
   const [models, setModels] = useState<CarModel[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+
   const [error, setError] = useState<Requisite>(new Requisite());
 
   const [loaded, setLoaded] = useState<boolean>(false);
 
-  const [searchModelId, setSearchModelId] = useStore("searchModelId", 0);
+  const [searchLocationId, setSearchLocationId] = useStore("searchLocationId", 0);
   const [searchFrom, setSearchFrom] = useStore("searchFrom", null);
   const [searchTo, setSearchTo] = useStore("searchTo", null);
 
@@ -46,15 +48,25 @@ export const Home = (props: RouteComponentProps) =>
       });
   }, []);
 
-  function handleSubmit(event: React.FormEvent)
+  useEffect(() =>
+  {
+    State.GetLocations().then((response) =>
+    {
+      setLocations(response.data || new Array<Location>());
+      setLoaded(true);
+    })
+      .catch((response) =>
+      {
+        setError(response);
+      });
+  }, []);
+
+  async function handleSubmit(event: React.FormEvent)
   {
     event.preventDefault();
 
     const from = jquery("#cf-3").datepicker("getDate");
     const to = jquery("#cf-4").datepicker("getDate");
-
-    console.log(from);
-    console.log(to);
 
     if (from.getTime() < Date.now()) {
       setError(new Requisite().error("Выберите дату начала больше текущей."));
@@ -69,9 +81,9 @@ export const Home = (props: RouteComponentProps) =>
       return;
     }
 
-    setSearchModelId(Number.parseInt(jquery("#cf-2").val() + "" || "", 10));
-    setSearchFrom(from);
-    setSearchTo(to);
+    await setSearchLocationId(Number.parseInt(jquery("#cf-2").val() + "" || "", 10));
+    await setSearchFrom(from);
+    await setSearchTo(to);
 
     props.history.push(`/search`);
   }
@@ -96,7 +108,7 @@ export const Home = (props: RouteComponentProps) =>
                   <ShowIf show={loaded}>
                     <div className="mb-3 mb-md-0 col-md-3">
                       <select name="" id="cf-2" required className="custom-select form-control">
-                        {(models.map((e) =>
+                        {(locations.map((e) =>
                           <option value={e.id} key={e.id}>{e.name}</option>,
                         ))}
                       </select>

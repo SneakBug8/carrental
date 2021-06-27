@@ -18,4 +18,20 @@ export class CarService
 
     return res;
   }
+
+  public static async GetLocationCars(locationId: number, from: Date, to: Date)
+  {
+    const locationcars = await Car.GetWithLocation(locationId);
+    const res = [];
+    for (const car of locationcars) {
+      const orders = await CarOrder.GetOrdersForCarWithinTimeframe(car.id, from, to);
+
+      if (!orders.length) {
+        await car.populate();
+        res.push(car);
+      }
+    }
+
+    return res;
+  }
 }

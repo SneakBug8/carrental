@@ -2,14 +2,20 @@ import React, { PropsWithChildren } from "react";
 import { Car } from "../entities/Car";
 import { useStore } from "react-context-hook";
 import { RouteComponentProps } from "react-router-dom";
+import { State } from "../State";
+import { CarModel } from "../entities/CarModel";
 
 export const RentCarCard = ({ car, history }: (RouteComponentProps & { car: Car, key: any })) =>
 {
   const [rentCarId, setRentCarId] = useStore("rentCarId", 0);
+  const [searchModel, setSearchModel] = useStore("searchModel");
 
-  function onClick(event: React.MouseEvent<HTMLAnchorElement>)
+  async function onClick(event: React.MouseEvent<HTMLAnchorElement>)
   {
     setRentCarId((event.target as HTMLElement).id);
+
+    const models = (await State.GetModels()).data;
+    setSearchModel(models.find((x: CarModel) => x.id === car.modelId));
     history.push("/rent");
     event.preventDefault();
   }
