@@ -35,8 +35,11 @@ export function ConvertAdminQuery(input: any, query: any)
   if (input.range) {
     const range = JSON.parse(input.range);
     if (range.length === 2) {
-      query.where("Id", ">", range[0]);
-      query.where("Id", "<", range[1]);
+      const amount = range[1] - range[0];
+      query.offset(range[0]);
+      query.limit(amount);
+      /* query.where("Id", ">", range[0]);
+      query.where("Id", "<", range[1]); */
     }
   }
   if (input.filter) {
