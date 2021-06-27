@@ -1,3 +1,4 @@
+Project landing page: http://k-2021-2.std-1482.ist.mospolytech.ru/
 
 ## How to run
 
