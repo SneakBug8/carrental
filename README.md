@@ -2,7 +2,11 @@ Project landing page: http://k-2021-2.std-1482.ist.mospolytech.ru/
 
 ## How to run
 
-Connection to PostgreSQL database is configured in src/DataBase.ts.
+Connection to PostgreSQL database is configured in `src/DataBase.ts`. Don't forget to import schema and test data from `dbexport.pgsql` made with pg_dump:
+
+```
+psql -U username dbname < dbexport.pgsql
+```
 
 ### Dev
 
