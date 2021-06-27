@@ -218,7 +218,6 @@ export class WebClientRouter
             await car.populate();
         }
 
-        console.log(JSON.stringify(cars));
         res.json(cars);
         // WebClientUtil.render(req, res, "register", {}, false);
     }
