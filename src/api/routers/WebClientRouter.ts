@@ -482,7 +482,7 @@ export class WebClientRouter
 
         const r2 = User.Update(user);
 
-        return res.json({ userId: r.data.id });
+        return res.json(new Requisite({ userId: r.data.id }));
     }
 
     public static async onAuth(req: IMyRequest, res: express.Response)
