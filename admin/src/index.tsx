@@ -8,10 +8,12 @@ import { CarModelsList, CarModelEdit, CarModelCreate } from "./resources/CarMode
 import { LocationsList, LocationEdit, LocationCreate } from "./resources/Locations";
 import { CarOrdersList, CarOrdersEdit, CarOrdersCreate } from "./resources/CarOrders";
 import { UsersList, UsersEdit, UsersCreate } from "./resources/Users";
+import { authProvider } from "./authProvider";
+import { MyLoginPage } from "./loginPage";
 
 ReactDOM.render(
   (<React.StrictMode>
-    <Admin dataProvider={restProvider("/api")}>
+    <Admin dataProvider={restProvider("/api")} authProvider={authProvider}>
       <Resource name="cars" list={CarsList} edit={CarEdit} create={CarCreate} icon={PostIcon} />
       <Resource name="models" list={CarModelsList} edit={CarModelEdit} create={CarModelCreate} icon={PostIcon} />
       <Resource name="locations" list={LocationsList} edit={LocationEdit} create={LocationCreate} icon={PostIcon} />

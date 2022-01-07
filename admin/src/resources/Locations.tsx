@@ -1,6 +1,6 @@
 // in posts.js
 import * as React from "react";
-import { List, Datagrid, Edit, Create, SimpleForm, TextField, EditButton, TextInput } from "react-admin";
+import { List, Datagrid, Edit, Create, SimpleForm, TextField, EditButton, TextInput, TopToolbar, FilterButton, CreateButton, ExportButton } from "react-admin";
 import RichTextInput from "ra-input-rich-text";
 import BookIcon from "@material-ui/icons/Book";
 import { CarModel } from "../entities/CarModel";
@@ -8,12 +8,27 @@ import { Location } from "../entities/Location";
 
 export const PostIcon = BookIcon;
 
-export const LocationsList = (props: any) => (
-  <List {...props}>
+export const AdminLimitedActions = ({ permissions, ...props }: any) => (
+  <TopToolbar>
+    <CreateButton disabled={ permissions !== "admin" }/>
+      <ExportButton/>
+  </TopToolbar>
+);
+
+export const ManagerLimitedActions = ({ permissions, ...props }: any) => (
+  <TopToolbar>
+    <CreateButton disabled={ !["admin", "manager"].includes(permissions) }/>
+      <ExportButton/>
+  </TopToolbar>
+);
+
+
+export const LocationsList = ({ permissions, ...props }: any) => (
+  <List {...props} actions={<AdminLimitedActions/>}>
     <Datagrid>
       <TextField source="id" />
       <TextField source="name" />
-      <EditButton basePath="/locations" />
+      { permissions === "admin" && <EditButton basePath="/locations" />}
     </Datagrid>
   </List>
 );

@@ -1,14 +1,22 @@
 // in posts.js
 import * as React from "react";
-import { List, Datagrid, Edit, Create, SimpleForm, TextField, EditButton, TextInput } from "react-admin";
+import { List, Datagrid, Edit, Create, SimpleForm, TextField, EditButton, TextInput, Toolbar, SaveButton, DeleteButton } from "react-admin";
 import RichTextInput from "ra-input-rich-text";
 import BookIcon from "@material-ui/icons/Book";
 import { CarModel } from "../entities/CarModel";
+import { ManagerLimitedActions } from "./Locations";
 
 export const PostIcon = BookIcon;
 
+const CustomToolbar = ({ permissions, ...props }: any) => (
+    <Toolbar {...props} >
+      {["admin", "manager"].includes(permissions) && <SaveButton />}
+      {["admin", "manager"].includes(permissions) && <DeleteButton />}
+    </Toolbar>
+);
+
 export const CarModelsList = (props: any) => (
-    <List {...props}>
+    <List {...props} actions={<ManagerLimitedActions/>}>
         <Datagrid>
             <TextField source="id" />
             <TextField source="name" />
@@ -23,7 +31,7 @@ const CarModelTitle = ({ record }: { record: CarModel} | any) => {
 
 export const CarModelEdit = (props: any) => (
     <Edit title={<CarModelTitle/>} {...props}>
-        <SimpleForm>
+        <SimpleForm toolbar={<CustomToolbar {...props} />}>
             <TextInput disabled source="id" />
             <TextInput source="name" />
             <TextInput source="photo" />

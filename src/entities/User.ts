@@ -45,7 +45,7 @@ export class User
             return new Requisite<User>().success(this.From(data));
         }
 
-        return new Requisite<User>().error("No such player");
+        return new Requisite<User>().error("No such user");
     }
 
     public static async GetByName(name: string)
@@ -56,7 +56,7 @@ export class User
             return new Requisite<User>().success(this.From(data));
         }
 
-        return new Requisite<User>().error("No such player");
+        return new Requisite<User>().error("No such user");
     }
 
     public static async Count(): Promise<number>

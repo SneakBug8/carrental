@@ -20,3 +20,6 @@ psql -U username dbname < dbexport.pgsql
 2. Make sure not to move/rename client folder from it default location
 3. `npm start` in main folder for Backend & Frontend on one ExpressJS server
 4. `cd admin && npm start` in separate console for admin panel
+
+
+Only admin can edit Users and Locations
