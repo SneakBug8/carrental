@@ -13,6 +13,7 @@ import { User } from "entities/User";
 import { ParseAdminQuery } from "utility/AdminQuery";
 import { CarService } from "services/CarService";
 import { CarOrdersService } from "services/CarOrdersService";
+import { MIS_DT } from "utility/MIS_DT";
 
 export class WebClientRouter
 {
@@ -27,6 +28,12 @@ export class WebClientRouter
         // Cars
         router.get("/cars/search", this.onCarsSearch);
         router.get("/cars/search2", this.onCarsSearchNew);
+
+        router.get("/cars/count", this.onCarsCount);
+
+        router.get("/cars/bylocation", this.onCarsByLocation);
+        router.get("/cars/bymodel", this.onCarsByModel);
+
 
         router.all("/cars/populate", this.onCarsPopulated);
         router.get("/cars/:id", this.onCarGet);
@@ -51,6 +58,10 @@ export class WebClientRouter
 
         // CarOrders
         router.get("/orders/filter", this.onOrdersFilter);
+
+        router.get("/orders/new", this.onNewOrders);
+        router.get("/orders/today", this.onCarsRentedToday);
+        router.get("/orders/latest", this.onLatestOrders);
 
         router.get("/orders/:id", this.onGetOrder);
         router.post("/orders", this.onOrderInsert);
@@ -132,6 +143,16 @@ export class WebClientRouter
 
         res.header("Content-Range", `cars ${adminquery.from}-${adminquery.to}/${count}`);
         res.json(cars);
+    }
+
+    public static async onCarsCount(req: IMyRequest, res: express.Response)
+    {
+        const cars = await Car.GetMany(req.query);
+
+        const adminquery = ParseAdminQuery(req.query);
+        const count = await Car.Count();
+
+        res.json({count});
     }
 
     public static async onCarsSearch(req: IMyRequest, res: express.Response)
@@ -220,6 +241,50 @@ export class WebClientRouter
 
         res.json(cars);
         // WebClientUtil.render(req, res, "register", {}, false);
+    }
+
+    public static async onCarsByLocation(req: IMyRequest, res: express.Response)
+    {
+        const data = await Car.CountByLocation();
+
+        const names = [];
+        const counts = [];
+
+        for (const d of data) {
+            const loc = await Location.GetById(d.LocationId);
+            names.push(loc.name);
+            counts.push(d.count);
+        }
+
+        res.json({
+            names,
+            counts
+        });
+
+        //res.json(data);
+
+    }
+
+    public static async onCarsByModel(req: IMyRequest, res: express.Response)
+    {
+        const data = await Car.CountByModel();
+
+        const names = [];
+        const counts = [];
+
+        for (const d of data) {
+            const loc = await CarModel.GetById(d.ModelId);
+            names.push(loc.name);
+            counts.push(d.count);
+        }
+
+        res.json({
+            names,
+            counts
+        });
+
+        //res.json(data);
+
     }
 
     public static async onGetModels(req: IMyRequest, res: express.Response)
@@ -358,6 +423,32 @@ export class WebClientRouter
         const id = Number.parseInt(req.params.id, 10);
         const r = await CarOrder.GetById(id);
         res.json(r);
+    }
+
+    public static async onNewOrders(req: IMyRequest, res: express.Response)
+    {
+        const d = await CarOrder.GetNewOrders();
+
+        res.json({count: d.length});
+    }
+
+    public static async onCarsRentedToday(req: IMyRequest, res: express.Response)
+    {
+        const d = await CarOrder.GetOrdersWithinTimeframe(
+            new Date(MIS_DT.GetExact() - MIS_DT.OneDay()), new Date(MIS_DT.GetExact()));
+
+        res.json({count: d.length});
+    }
+
+    public static async onLatestOrders(req: IMyRequest, res: express.Response)
+    {
+        const d = await CarOrder.GetLatestOrders();
+
+        for (const o of d) {
+            (o as any).user = (await User.GetById(o.customerId)).data;
+        }
+
+        res.json(d);
     }
 
     public static async onOrderDelete(req: IMyRequest, res: express.Response)

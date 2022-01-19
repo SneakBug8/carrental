@@ -4,6 +4,7 @@ import { Config } from "config";
 import { Requisite } from "services/Requisites/Requisite";
 import { ConvertAdminQuery } from "utility/AdminQuery";
 import { CarOrdersService } from "services/CarOrdersService";
+import { MIS_DT } from "utility/MIS_DT";
 
 export class CarOrder
 {
@@ -12,6 +13,7 @@ export class CarOrder
     public from: Date;
     public to: Date;
     public customerId: number;
+    public MIS_DT = MIS_DT.GetExact();
 
     public static From(dbobject: any)
     {
@@ -21,6 +23,7 @@ export class CarOrder
         res.from = new Date(dbobject.From);
         res.to = new Date(dbobject.To);
         res.customerId = dbobject.CustomerId;
+        res.MIS_DT = dbobject.MIS_DT;
 
         return res;
     }
@@ -99,6 +102,7 @@ export class CarOrder
                 From: new Date(order.from),
                 To: new Date(order.to),
                 CustomerId: order.customerId,
+                MIS_DT: order.MIS_DT
             }).returning("Id");
 
             order.id = d[0];
@@ -150,6 +154,29 @@ export class CarOrder
     {
         const data = await CarOrderRepository().select()
             .where("CarId", carId).whereRaw(`("From", "To") overlaps (?, ?)`, [from, to]);
+
+        return this.UseQuery(data);
+    }
+
+    public static async GetOrdersWithinTimeframe(from: Date, to: Date): Promise<CarOrder[]>
+    {
+        const data = await CarOrderRepository().select().whereRaw(`("From", "To") overlaps (?, ?)`, [from, to]);
+
+        return this.UseQuery(data);
+    }
+
+    public static async GetNewOrders(): Promise<CarOrder[]>
+    {
+        const data = await CarOrderRepository().select()
+            .where("MIS_DT", ">=", MIS_DT.GetDayStart());
+
+        return this.UseQuery(data);
+    }
+
+    public static async GetLatestOrders(): Promise<CarOrder[]>
+    {
+        const data = await CarOrderRepository().select()
+            .orderBy("MIS_DT", "desc").limit(5);
 
         return this.UseQuery(data);
     }

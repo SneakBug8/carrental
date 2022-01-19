@@ -75,6 +75,18 @@ export class Car
         return this.UseQuery(data);
     }
 
+    public static async CountByLocation()
+    {
+        const data = await CarRepository().select("LocationId").count().groupBy("LocationId");
+        return data;
+    }
+
+    public static async CountByModel()
+    {
+        const data = await CarRepository().select("ModelId").count().groupBy("ModelId");
+        return data;
+    }
+
     public static async GetWithModel(id: number)
     {
         const data = await CarRepository().select().where("ModelId", id);
