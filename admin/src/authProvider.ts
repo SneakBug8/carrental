@@ -30,8 +30,8 @@ export const authProvider = {
   },
   logout: () =>
   {
-    localStorage.removeItem('role');
-    return Promise.resolve('/login');
+    localStorage.removeItem("role");
+    return Promise.resolve("/login");
   },
   getIdentity: () =>
   {
